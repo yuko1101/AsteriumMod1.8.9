@@ -1,0 +1,16 @@
+[
+{
+  "modid": "asterium",
+  "name": "Asterium",
+  "description": "Asterium mod for Minecraft Forge 1.8.9",
+  "version": "1.8.9",
+  "mcversion": "1.8.9",
+  "url": "https://github.com/yuko1101",
+  "updateUrl": "",
+  "authorList": ["yuko1101"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

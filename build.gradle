@@ -34,8 +34,6 @@ minecraft {
 }
 
 
-version = project.minecraft.version
-
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }

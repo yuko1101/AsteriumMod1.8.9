@@ -5,16 +5,31 @@ import gg.essential.api.commands.DefaultHandler
 import gg.essential.api.commands.SubCommand
 import gg.essential.api.utils.GuiUtil
 import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.utils.ChatLib
 import java.util.*
 
+@Suppress("unused")
 class AsteriumCommand : Command("asterium") {
+
     @DefaultHandler
     fun handle() {
         Objects.requireNonNull(Asterium.config.gui())?.let { GuiUtil.open(it) }
     }
 
     @SubCommand(value = "toggle", description = "Toggle your Asterium enabled or disabled.")
-    fun refresh() {
+    fun toggle() {
         Asterium.config.isEnabled = !Asterium.config.isEnabled
+    }
+
+    @SubCommand(value = "refresh", description = "Refresh your Asterium functions including addons.")
+    fun refresh() {
+        Asterium.refresh()
+        ChatLib.chat("リフレッシュしました！")
+    }
+
+    @SubCommand(value = "unload", description = "Unload all your Asterium Addons.")
+    fun unload() {
+        Asterium.unloadExternalAddons()
+        ChatLib.chat("アンロードしました！")
     }
 }

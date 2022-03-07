@@ -9,6 +9,7 @@ import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.arrowPath.ArrowPath
 import io.github.yuko1101.asterium.utils.AddonClassLoader
 import io.github.yuko1101.asterium.utils.FileManager
+import io.github.yuko1101.asterium.utils.InventoryUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.multiplayer.ServerData
@@ -36,6 +37,7 @@ class Asterium {
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(EventEmitter)
+        MinecraftForge.EVENT_BUS.register(InventoryUtils)
 //        addons.forEach{ addonMetaData -> MinecraftForge.EVENT_BUS.register(addonMetaData.addon) }
         EssentialAPI.getCommandRegistry().registerCommand(AsteriumCommand())
 

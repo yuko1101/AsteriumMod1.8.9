@@ -19,7 +19,6 @@ object AddonManager {
     fun refreshAddons() {
         unloadExternalAddons()
         loadExternalAddons()
-        addons.add(AddonCore(listOf(ArrowPath().addonMetaData()), null))
 
         Asterium.refreshConfig()
     }

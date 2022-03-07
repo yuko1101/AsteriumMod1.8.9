@@ -9,7 +9,7 @@ import io.github.yuko1101.asterium.features.addons.AddonManager
 import java.io.File
 import java.util.*
 
-class AsteriumConfig : Vigilant(File("./Asterium/config.toml")) {
+class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
 
     @Property(
         type = PropertyType.SWITCH,

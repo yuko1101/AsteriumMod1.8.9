@@ -33,6 +33,7 @@ class Asterium {
     fun init(event: FMLInitializationEvent) {
         FileManager.init()
 
+        AddonManager.addons.add(AddonCore(listOf(ArrowPath().addonMetaData()), null))
         AddonManager.refreshAddons()
 
         MinecraftForge.EVENT_BUS.register(this)

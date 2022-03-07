@@ -10,6 +10,8 @@ import org.lwjgl.input.Mouse
 object InventoryUtils {
     private val listeners = arrayListOf<Pair<(GuiContainer) -> Boolean, (Int, ItemStack) -> Boolean>>()
     private val temporaryListeners = arrayListOf<Pair<(GuiContainer) -> Boolean, (Int, ItemStack) -> Boolean>>()
+
+    @Suppress("unused")
     fun onClick(guiCheck: (guiContainer: GuiContainer) -> Boolean, callback: (slot: Int, item: ItemStack) -> Boolean, removeOnGuiChange: Boolean = true) {
         if (removeOnGuiChange) {
             temporaryListeners.add(Pair(guiCheck, callback))
@@ -34,9 +36,7 @@ object InventoryUtils {
         }
     }
     @SubscribeEvent
-    fun onGuiClose(event: GuiOpenEvent) {
-        if (event.gui == null) {
-            temporaryListeners.clear()
-        }
+    fun onGuiChanged(event: GuiOpenEvent) {
+        temporaryListeners.clear()
     }
 }

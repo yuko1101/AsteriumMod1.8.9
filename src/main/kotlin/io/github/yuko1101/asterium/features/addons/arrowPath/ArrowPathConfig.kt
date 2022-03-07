@@ -6,7 +6,7 @@ import gg.essential.vigilance.data.PropertyType
 import java.awt.Color
 import java.io.File
 
-class ArrowPathConfig : Vigilant(File("./Asterium/Addons/ArrowPath.toml")) {
+class ArrowPathConfig : Vigilant(File("./asterium/config/ArrowPath.toml")) {
 
     @Property(
         type = PropertyType.SWITCH,

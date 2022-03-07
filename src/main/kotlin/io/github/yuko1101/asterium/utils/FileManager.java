@@ -8,15 +8,15 @@ public class FileManager {
 
     private static final Gson gson = new Gson();
 
-    private static final File ROOT_DIR = new File("Asterium");
-    private static final File MODS_DIR = new File(ROOT_DIR, "Mods");
-    private static final File ADDONS_DIR = new File(ROOT_DIR, "Addons");
-    private static final File COSMETICS_DIR = new File(ROOT_DIR, "Cosmetics");
+    private static final File ROOT_DIR = new File("asterium");
+    private static final File CONFIG_DIR = new File(ROOT_DIR, "config");
+    private static final File ADDONS_DIR = new File(ROOT_DIR, "addons");
+    private static final File COSMETICS_DIR = new File(ROOT_DIR, "cosmetics");
 
     public static void init() {
 
         if (!ROOT_DIR.exists()) { ROOT_DIR.mkdirs(); }
-        if (!MODS_DIR.exists()) { MODS_DIR.mkdirs(); }
+        if (!CONFIG_DIR.exists()) { CONFIG_DIR.mkdirs(); }
         if (!ADDONS_DIR.exists()) { ADDONS_DIR.mkdirs(); }
         if (!COSMETICS_DIR.exists()) { COSMETICS_DIR.mkdirs(); }
 
@@ -28,7 +28,7 @@ public class FileManager {
     }
 
     public static File getModsDirectory() {
-        return MODS_DIR;
+        return CONFIG_DIR;
     }
 
     public static File getAddonsDirectory() {

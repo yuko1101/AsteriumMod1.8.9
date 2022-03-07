@@ -12,7 +12,7 @@ import java.util.jar.JarFile
 
 
 class AddonClassLoader(val jarPath: String) {
-    private var urlClassLoader: URLClassLoader? = URLClassLoader(
+    var urlClassLoader: URLClassLoader? = URLClassLoader(
         arrayOf<URL>(File(jarPath).toURI().toURL()),
         this.javaClass.classLoader
     )
@@ -58,7 +58,7 @@ class AddonClassLoader(val jarPath: String) {
                 // 引数なしコンストラクタを持つことを確認
 //            try {
 //                clazz.getConstructor()
-//            } catch (e: NoSuchMethodException) {
+    //            } catch (e: NoSuchMethodException) {
 //                continue
 //            }
 
@@ -73,6 +73,7 @@ class AddonClassLoader(val jarPath: String) {
     }
 
     fun unload() {
+        urlClassLoader?.close()
         urlClassLoader = null
         System.gc()
     }

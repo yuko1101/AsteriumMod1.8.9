@@ -5,10 +5,7 @@ import gg.essential.api.gui.Notifications
 import io.github.yuko1101.asterium.commands.AsteriumCommand
 import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.features.ChatChannel
-import io.github.yuko1101.asterium.features.addons.AddonMetaData
-import io.github.yuko1101.asterium.features.addons.EventEmitter
-import io.github.yuko1101.asterium.features.addons.ExtraEventListener
-import io.github.yuko1101.asterium.features.addons.FeaturedAddon
+import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.arrowPath.ArrowPath
 import io.github.yuko1101.asterium.utils.AddonClassLoader
 import io.github.yuko1101.asterium.utils.FileManager
@@ -35,7 +32,7 @@ class Asterium {
     fun init(event: FMLInitializationEvent) {
         FileManager.init()
 
-        refreshAddons()
+        AddonManager.refreshAddons()
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(EventEmitter)
@@ -44,11 +41,13 @@ class Asterium {
 
         Runtime.getRuntime().addShutdownHook(object : Thread("ShutDown") {
             override fun run() {
-                addons.forEach { addonMetaData -> addonMetaData.addon.shutdown() }
+                AddonManager.getAddonMetaDataList().forEach {
+                    it.addon.shutdown()
+                }
             }
         })
 
-        EssentialAPI.getNotifications().push("Asterium Addons", "Loaded ${addons.size} addons!")
+        EssentialAPI.getNotifications().push("Asterium Addons", "Loaded ${AddonManager.getAddonMetaDataList().size} addons!")
     }
 
     @Mod.EventHandler
@@ -59,7 +58,7 @@ class Asterium {
     companion object {
         private val mc: Minecraft = Minecraft.getMinecraft()
 
-        const val MODID = "Asterium"
+        const val MODID = "asterium"
         const val VERSION = "0.2.0"
         var config = AsteriumConfig()
 
@@ -73,69 +72,20 @@ class Asterium {
             return server.serverIP
         }
 
-        var addons = arrayListOf<AddonMetaData>()
-        var addonClassLoaders = arrayListOf<AddonClassLoader>()
+
 
 
         fun refresh() {
-            refreshAddons()
+            AddonManager.refreshAddons()
         }
 
-        private fun refreshAddons() {
+        fun refreshConfig() {
             config = AsteriumConfig()
-
-            unloadExternalAddons()
-            loadExternalAddons()
-            addons.add(ArrowPath().addonMetaData())
-
             config.initAddons()
             config.initialize()
         }
 
-        fun unloadExternalAddons() {
-            addonClassLoaders.filter { addonClassLoader -> shouldUnload(addonClassLoader) }.forEach { addonClassLoader -> addonClassLoader.unload();println("[Asterium Addons] Unloaded ${addonClassLoader.loadedClasses}") }
-            addonClassLoaders = addonClassLoaders.filterNot { addonClassLoader -> shouldUnload(addonClassLoader) } as ArrayList<AddonClassLoader>
-            addonClassLoaders.forEach { addonClassLoader -> println("[Asterium Addons] Skipped unloading ${addonClassLoader.loadedClasses}")}
-            addons.forEach { addonMetaData -> addonMetaData.addon.shutdown() }
-            addons = addons.filterNot { addonMetaData -> shouldAddonUnload(addonMetaData) } as ArrayList<AddonMetaData>
-        }
 
-        private fun shouldAddonUnload(addonMetaData: AddonMetaData): Boolean {
-            return addonClassLoaders.all { addonClassLoader -> !addonClassLoader.loadedClasses.contains(addonMetaData.addon::class.toString()) }
-        }
-
-        private fun shouldUnload(addonClassLoader: AddonClassLoader): Boolean {
-            return !(addons.filterNot { addonMetaData -> addonMetaData.unloadable }.map { addonMetaData: AddonMetaData -> addonMetaData.addon::class.toString() }.any{ path -> addonClassLoader.loadedClasses.contains(path) })
-        }
-
-
-        private fun loadExternalAddons() {
-            val addonFiles = FileManager.getAddonsDirectory().listFiles { file -> file.extension == "jar" } ?: return
-            addonFiles.forEach { file ->
-                if (addonClassLoaders.any { addonClassLoader -> addonClassLoader.jarPath == file.absolutePath }) {
-                    println("[Asterium Addons] Skipped loading $file because it has already loaded")
-                } else {
-                    println("[Asterium Addons] Loading $file")
-                    val addonClassLoader = AddonClassLoader(file.absolutePath)
-                    addons.addAll(addonClassLoader.loadClassesInJar().map { featuredAddon: FeaturedAddon -> featuredAddon.addonMetaData() })
-                    addonClassLoaders.add(addonClassLoader)
-                }
-
-//            val load :URLClassLoader = URLClassLoader.newInstance(arrayOf<URL>(file.toURI().toURL()))
-//            val cl = load.loadClass("asterium.${file.nameWithoutExtension.split("-").first()
-//                .lowercase(Locale.getDefault())}.${file.nameWithoutExtension.split("-").first()}")
-//            println("[Asterium Addons] Loading File from $file / asterium.${file.nameWithoutExtension.split("-").first()
-//                .lowercase(Locale.getDefault())}.${file.nameWithoutExtension.split("-").first()}")
-//            if (cl != null) {
-//                println("Found!")
-//                println(cl)
-//                if () {
-//                    println("Added!")
-//                    addons.add(cl.addonMetaData())
-//                }
-//            }
-            }
-        }
 
     }
 
@@ -148,15 +98,6 @@ class Asterium {
     fun onRenderText(event: RenderGameOverlayEvent.Text) {
         ChatChannel.onRender()
     }
-
-    @SubscribeEvent
-    fun onChat(event: ClientChatReceivedEvent) {
-        ChatChannel.onChat(event)
-    }
-
-
-
-
 }
 
 

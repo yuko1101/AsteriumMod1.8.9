@@ -3,7 +3,6 @@ package io.github.yuko1101.asterium.utils
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import sun.rmi.runtime.Log
 import java.awt.Color
 import java.io.File
 import java.io.IOException

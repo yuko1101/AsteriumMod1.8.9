@@ -29,10 +29,15 @@ class EventEmitter {
         fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {
             getListeners().forEach {listener -> listener.onRenderWorldLastEvent(event) }
         }
+        @SubscribeEvent
+        fun onRenderLivingEvent(event: RenderLivingEvent<*>) {
+            getListeners().forEach {listener -> listener.onRenderLivingEvent(event) }
+        }
+
 
         private fun getListeners(): List<ExtraEventListener> {
             val listeners = arrayListOf<ExtraEventListener>()
-            Asterium.addons.forEach { addonMetaData -> listeners.addAll(addonMetaData.eventListeners) }
+            AddonManager.getAddonMetaDataList().forEach { addonMetaData -> listeners.addAll(addonMetaData.eventListeners) }
             return listeners
         }
 //        @SubscribeEvent

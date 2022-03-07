@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-TweakOrder: 0
-ModSide: CLIENT
-TweakClass: gg.essential.loader.stage0.EssentialSetupTweaker
-

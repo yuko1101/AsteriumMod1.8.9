@@ -5,6 +5,7 @@ import gg.essential.api.commands.DefaultHandler
 import gg.essential.api.commands.SubCommand
 import gg.essential.api.utils.GuiUtil
 import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.features.addons.AddonManager
 import io.github.yuko1101.asterium.utils.ChatLib
 import java.util.*
 
@@ -29,7 +30,7 @@ class AsteriumCommand : Command("asterium") {
 
     @SubCommand(value = "unload", description = "Unload all your Asterium Addons.")
     fun unload() {
-        Asterium.unloadExternalAddons()
+        AddonManager.unload()
         ChatLib.chat("アンロードしました！")
     }
 }

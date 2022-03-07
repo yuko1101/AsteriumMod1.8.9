@@ -3,13 +3,13 @@ buildscript {
         mavenCentral()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven"
         }
         maven { url 'https://jitpack.io' }
         flatDir dirs: 'libs'
     }
     dependencies {
-        classpath 'com.github.ReplayMod:ForgeGradle:48c4f0c6c7:all'
+        classpath 'com.github.ReplayMod:ForgeGradle:ceb83c0:all'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 
@@ -50,9 +50,14 @@ processResources
                 expand 'version':project.version, 'mcversion':project.minecraft.version
             }
 
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
+            exclude "META-INF/**"
+            copy {
+                from("src/main/resources")
+                into("build/classes/main")
             }
+
+            rename '(.+_at.cfg)', 'META-INF/$1'
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
 configurations {
@@ -75,7 +80,7 @@ dependencies {
     provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     shade "gg.essential:loader-launchwrapper:1.1.2"
-    provided "gg.essential:essential-1.8.9-forge:1530"
+    provided "gg.essential:essential-1.8.9-forge:1854"
 }
 
 jar {

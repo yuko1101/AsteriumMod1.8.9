@@ -1,16 +1,18 @@
 [
-{
-  "modid": "asterium",
-  "name": "Asterium",
-  "description": "Asterium mod for Minecraft Forge 1.8.9",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "https://github.com/yuko1101",
-  "updateUrl": "",
-  "authorList": ["yuko1101"],
-  "credits": "Asterium by yuko1101, Essential by Sk1er LLC",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "asterium",
+    "name": "Asterium",
+    "description": "Asterium mod for Minecraft Forge 1.8.9",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/yuko1101/",
+    "updateUrl": "",
+    "authorList": [
+      "yuko1101"
+    ],
+    "credits": "Created by yuko1101, Essential created by Sk1er LLC",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]

@@ -1,6 +1,7 @@
 package io.github.yuko1101.asterium.features.addons
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.client.event.RenderLivingEvent
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
@@ -10,6 +11,7 @@ interface ExtraEventListener {
     fun onTickEvent(event: TickEvent) {}
     fun onPlayerTickEvent(event: TickEvent.PlayerTickEvent) {}
     fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {}
+    fun onRenderLivingEvent(event: RenderLivingEvent<*>) {}
 
 
 }

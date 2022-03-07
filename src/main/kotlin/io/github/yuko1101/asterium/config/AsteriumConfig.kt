@@ -5,6 +5,7 @@ import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.features.addons.AddonManager
 import java.io.File
 import java.util.*
 
@@ -22,8 +23,8 @@ class AsteriumConfig : Vigilant(File("./Asterium/config.toml")) {
     fun initAddons() {
         category("Addons") {
             println("[Asterium Addons] Loading...")
-            println("[Asterium Addons] Addons: ${Asterium.addons.map { addonMetadata -> "${addonMetadata.name} v${addonMetadata.version}" }}")
-            Asterium.addons.forEach{ addonMetaData ->
+            println("[Asterium Addons] Addons: ${AddonManager.getAddonMetaDataList().map { addonMetadata -> "${addonMetadata.name} v${addonMetadata.version}" }}")
+            AddonManager.getAddonMetaDataList().forEach{ addonMetaData ->
                 println("[Asterium Addons] Loading ${addonMetaData.name}...")
                 addonMetaData.addon.init()
                 if (addonMetaData.addon.config() != null) {

@@ -7,6 +7,7 @@ import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.features.ChatChannel
 import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.arrowPath.ArrowPath
+import io.github.yuko1101.asterium.listener.Listener
 import io.github.yuko1101.asterium.utils.AddonClassLoader
 import io.github.yuko1101.asterium.utils.FileManager
 import io.github.yuko1101.asterium.utils.InventoryUtils
@@ -39,6 +40,7 @@ class Asterium {
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(EventEmitter)
         MinecraftForge.EVENT_BUS.register(InventoryUtils)
+        MinecraftForge.EVENT_BUS.register(Listener)
 //        addons.forEach{ addonMetaData -> MinecraftForge.EVENT_BUS.register(addonMetaData.addon) }
         EssentialAPI.getCommandRegistry().registerCommand(AsteriumCommand())
 
@@ -59,7 +61,7 @@ class Asterium {
     }
 
     companion object {
-        private val mc: Minecraft = Minecraft.getMinecraft()
+        val mc: Minecraft = Minecraft.getMinecraft()
 
         const val MODID = "asterium"
         const val VERSION = "0.2.0"
@@ -70,9 +72,9 @@ class Asterium {
 
         var scaledResolution = ScaledResolution(mc)
 
-        fun getIP(): String {
-            val server: ServerData = Minecraft.getMinecraft().currentServerData ?: return ""
-            return server.serverIP
+        fun getServerIP(): String? {
+            val server: ServerData? = Minecraft.getMinecraft().currentServerData
+            return server?.serverIP
         }
 
 

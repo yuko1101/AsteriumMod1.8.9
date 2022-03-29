@@ -26,7 +26,10 @@ class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
             println("[Asterium Addons] Addons: ${AddonManager.getAddonMetaDataList().map { addonMetadata -> "${addonMetadata.name} v${addonMetadata.version}" }}")
             AddonManager.getAddonMetaDataList().forEach{ addonMetaData ->
                 println("[Asterium Addons] Loading ${addonMetaData.name}...")
-                addonMetaData.addon.init()
+                if (!addonMetaData.initialized) {
+                    addonMetaData.addon.init()
+                    addonMetaData.initialized = true
+                }
                 if (addonMetaData.addon.config() != null) {
                     addonMetaData.addon.config()!!.initialize()
                     button(addonMetaData.name, addonMetaData.description, addonMetaData.name, action = {

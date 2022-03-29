@@ -90,11 +90,11 @@ jar {
         }
     }
 
-    manifest {
-        attributes "ModSide": "CLIENT",
-                "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
-                "TweakOrder": "0"
-    }
+    manifest.attributes(
+            "ModSide": "CLIENT",
+            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
+            "TweakOrder": "0"
+    )
 }
 
 tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}

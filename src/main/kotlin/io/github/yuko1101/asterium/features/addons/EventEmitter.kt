@@ -6,6 +6,7 @@ import net.minecraft.entity.passive.EntityBat
 import net.minecraftforge.client.event.*
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -34,6 +35,10 @@ object EventEmitter {
     @SubscribeEvent
     fun onTickEventPlayerTickEvent(event: TickEvent.PlayerTickEvent) {
         getListeners().forEach {listener -> listener.onTickEventPlayerTickEvent(event) }
+    }
+    @SubscribeEvent
+    fun onTickEventClientTickEvent(event: TickEvent.ClientTickEvent) {
+        getListeners().forEach {listener -> listener.onTickEventClientTickEvent(event) }
     }
 
 
@@ -174,6 +179,34 @@ object EventEmitter {
     @SubscribeEvent
     fun onInputEventMouseInputEvent(event: InputEvent.MouseInputEvent) {
         getListeners().forEach {listener -> listener.onInputEventMouseInputEvent(event) }
+    }
+
+
+    // World
+
+    @SubscribeEvent
+    fun onWorldEvent(event: WorldEvent) {
+        getListeners().forEach {listener -> listener.onWorldEvent(event) }
+    }
+    @SubscribeEvent
+    fun onWorldEventLoad(event: WorldEvent.Load) {
+        getListeners().forEach {listener -> listener.onWorldEventLoad(event) }
+    }
+    @SubscribeEvent
+    fun onWorldEventSave(event: WorldEvent.Save) {
+        getListeners().forEach {listener -> listener.onWorldEventSave(event) }
+    }
+    @SubscribeEvent
+    fun onWorldEventUnload(event: WorldEvent.Unload) {
+        getListeners().forEach {listener -> listener.onWorldEventUnload(event) }
+    }
+    @SubscribeEvent
+    fun onWorldEventCreateSpawnPosition(event: WorldEvent.CreateSpawnPosition) {
+        getListeners().forEach {listener -> listener.onWorldEventCreateSpawnPosition(event) }
+    }
+    @SubscribeEvent
+    fun onWorldEventPotentialSpawns(event: WorldEvent.PotentialSpawns) {
+        getListeners().forEach {listener -> listener.onWorldEventPotentialSpawns(event) }
     }
 
 

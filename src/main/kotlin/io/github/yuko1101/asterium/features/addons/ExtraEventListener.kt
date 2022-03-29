@@ -1,8 +1,10 @@
 package io.github.yuko1101.asterium.features.addons
 
 import net.minecraftforge.client.event.*
+import net.minecraftforge.client.event.sound.SoundEvent
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
@@ -17,6 +19,7 @@ interface ExtraEventListener {
     fun onTickEvent(event: TickEvent) {}
     fun onTickEventRenderTickEvent(event: TickEvent.RenderTickEvent) {}
     fun onTickEventPlayerTickEvent(event: TickEvent.PlayerTickEvent) {}
+    fun onTickEventClientTickEvent(event: TickEvent.ClientTickEvent) {}
 
     // Render
 
@@ -68,6 +71,24 @@ interface ExtraEventListener {
 
     fun onInputEventKeyInputEvent(event: InputEvent.KeyInputEvent) {}
     fun onInputEventMouseInputEvent(event: InputEvent.MouseInputEvent) {}
+
+
+    // World
+
+
+    fun onWorldEvent(event: WorldEvent) {}
+    fun onWorldEventLoad(event: WorldEvent.Load) {}
+    fun onWorldEventSave(event: WorldEvent.Save) {}
+    fun onWorldEventUnload(event: WorldEvent.Unload) {}
+    fun onWorldEventCreateSpawnPosition(event: WorldEvent.CreateSpawnPosition) {}
+    fun onWorldEventPotentialSpawns(event: WorldEvent.PotentialSpawns) {}
+
+
+//    // Sound
+//
+//    fun onSoundEvent(event: SoundEvent) {}
+//    fun onSoundEventSoundSourceEvent(event: SoundEvent.SoundSourceEvent) {}
+
 
 
 

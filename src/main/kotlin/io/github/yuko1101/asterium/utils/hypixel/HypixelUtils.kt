@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.utils
+package io.github.yuko1101.asterium.utils.hypixel
 
 import io.github.yuko1101.asterium.Asterium
 import net.minecraft.util.EnumChatFormatting

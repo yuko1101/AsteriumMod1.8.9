@@ -6,18 +6,19 @@ buildscript {
             url = "https://files.minecraftforge.net/maven"
         }
         maven { url 'https://jitpack.io' }
+        maven { url 'https://repo.spongepowered.org/maven' }
         flatDir dirs: 'libs'
     }
     dependencies {
         classpath 'com.github.ReplayMod:ForgeGradle:ceb83c0:all'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'net.minecraftforge.gradle.forge'
-
 
 version = "0.2.0"
 group= "io.github.yuko1101.asterium"
@@ -30,7 +31,8 @@ minecraft {
     runDir = "run"
     mappings = "stable_22"
     makeObfSourceJar = false
-    clientRunArgs += ["--tweakClass=gg.essential.loader.stage0.EssentialSetupTweaker"]
+    clientJvmArgs += ["-Dfml.coreMods.load=io.github.yuko1101.asterium.tweaker.AsteriumLoadingPlugin", "-Dasmhelper.verbose=true", "-Dmixin.debug.verbose=true", "-Dmixin.debug.export=true", "-Dmixin.dumpTargetOnFailure=true"]
+    clientRunArgs += ["--tweakClass=gg.essential.loader.stage0.EssentialSetupTweaker", "--mixins=mixins.asterium.json" ]
 }
 
 
@@ -73,6 +75,9 @@ repositories {
     maven {
         url = "https://repo.sk1er.club/repository/maven-releases/"
     }
+    maven {
+        url = "https://repo.spongepowered.org/maven/"
+    }
 }
 
 dependencies {
@@ -80,7 +85,24 @@ dependencies {
     provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     shade "gg.essential:loader-launchwrapper:1.1.3"
-    provided "gg.essential:essential-1.8.9-forge:1854"
+    provided("gg.essential:essential-1.8.9-forge:2163") {
+        exclude module: "asm"
+        exclude module: "asm-commons"
+        exclude module: "asm-tree"
+        exclude module: "gson"
+    }
+
+    provided("com.github.Skytils:AsmHelper:91ecc2bd9c")
+    shade ("com.github.Skytils:AsmHelper:91ecc2bd9c") {
+        exclude module: "kotlin-reflect"
+        exclude module: "kotlin-stdlib-jdk8"
+        exclude module: "kotlin-stdlib-jdk7"
+        exclude module: "kotlin-stdlib"
+        exclude module: "kotlinx-coroutines-core"
+    }
+
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileOnly("org.spongepowered:mixin:0.8.5")
 }
 
 jar {
@@ -93,13 +115,13 @@ jar {
     manifest.attributes(
             "ModSide": "CLIENT",
             "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
-            "TweakOrder": "0"
+            "TweakOrder": "0",
+            "MixinConfigs": "mixins.asterium.json",
+            "FMLCorePlugin": "io.github.yuko1101.asterium.tweaker.AsteriumLoadingPlugin",
+            "FMLCorePluginContainsFMLMod": true,
+            "ForceLoadAsMod": true,
+            "ModType": "FML",
     )
 }
 
 tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
-
-
-runClient {
-    args '--username=debug'
-}

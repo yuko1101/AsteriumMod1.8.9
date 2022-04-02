@@ -1,0 +1,12 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
+  "plugin": "io.github.yuko1101.asterium.mixins.AsteriumMixinPlugin",
+  "package": "io.github.yuko1101.asterium.mixins.transformers",
+  "refmap": "mixins.asterium.refmap.json",
+  "mixins": [
+    "network.MixinNetworkManager",
+    "network.MixinNetHandlerPlayClient"
+  ],
+  "verbose": true
+}

@@ -1,5 +1,6 @@
 package io.github.yuko1101.asterium.utils
 
+import gg.essential.api.utils.Multithreading
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -18,6 +19,7 @@ import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.event.RenderLivingEvent
 import java.awt.Color
+import java.util.concurrent.TimeUnit
 
 
 class WorldRenderUtils {
@@ -73,10 +75,9 @@ class WorldRenderUtils {
             armorStand.customNameTag = "[Asterium] Text:${text}"
             Minecraft.getMinecraft().theWorld.spawnEntityInWorld(armorStand)
             armorStand.setPosition(x, y, z)
-            Thread(Runnable {
-                Thread.sleep(time)
+            Multithreading.schedule({
                 armorStand.setDead()
-            }).start()
+            }, time, TimeUnit.MILLISECONDS)
         }
 
         fun onRenderArmorStand(event: RenderLivingEvent.Pre<EntityArmorStand>) {

@@ -1,12 +1,10 @@
-package io.github.yuko1101.asterium.utils
+package io.github.yuko1101.asterium.utils.minecraft
 
 import gg.essential.api.utils.Multithreading
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.renderer.GlStateManager
-
-import net.minecraft.client.renderer.WorldRenderer
 
 import org.lwjgl.opengl.GL11
 
@@ -22,7 +20,7 @@ import java.awt.Color
 import java.util.concurrent.TimeUnit
 
 
-class WorldRenderUtils {
+class SubRenderUtils {
     companion object {
 
 

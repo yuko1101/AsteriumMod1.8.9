@@ -1,13 +1,7 @@
 package io.github.yuko1101.asterium.utils.minecraft
 
-import com.google.common.collect.Iterables
-import com.google.common.collect.Lists
 import net.minecraft.client.Minecraft
-import net.minecraft.scoreboard.Score
-import net.minecraft.scoreboard.ScorePlayerTeam
 import net.minecraft.scoreboard.Scoreboard
-import java.util.stream.Collectors
-
 
 object ScoreboardUtils {
     private val mc = Minecraft.getMinecraft()

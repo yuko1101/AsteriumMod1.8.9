@@ -1,7 +1,7 @@
 package io.github.yuko1101.asterium.listener
 
 import io.github.yuko1101.asterium.features.ChatChannel
-import io.github.yuko1101.asterium.utils.WorldRenderUtils
+import io.github.yuko1101.asterium.utils.minecraft.SubRenderUtils
 import io.github.yuko1101.asterium.utils.hypixel.skyblock.dungeon.DungeonMembers
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 object Listener {
     @SubscribeEvent
     fun onRenderArmorStand(event: RenderLivingEvent.Pre<EntityArmorStand>) {
-        WorldRenderUtils.onRenderArmorStand(event)
+        SubRenderUtils.onRenderArmorStand(event)
     }
 
     @SubscribeEvent

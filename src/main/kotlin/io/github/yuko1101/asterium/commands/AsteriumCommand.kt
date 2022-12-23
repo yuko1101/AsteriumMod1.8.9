@@ -14,7 +14,7 @@ class AsteriumCommand : Command("asterium") {
 
     @DefaultHandler
     fun handle() {
-        Objects.requireNonNull(Asterium.config.gui())?.let { GuiUtil.open(it) }
+        Asterium.config.gui()?.let { GuiUtil.open(it) }
     }
 
     @SubCommand(value = "toggle", description = "Toggle your Asterium enabled or disabled.")

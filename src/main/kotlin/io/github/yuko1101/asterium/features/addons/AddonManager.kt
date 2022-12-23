@@ -30,18 +30,10 @@ object AddonManager {
 
     private fun unloadExternalAddons() {
         addons.forEach { addon -> addon.addonMetaDataList.forEach { it.addon.shutdown() } }
-        addons.filter { addon -> shouldUnload(addon) }.forEach { addon ->
-            addon.addonClassLoader?.unload()
-            addon.addonClassLoader?.let { println("[Asterium Addons] Unloaded ${addon.addonClassLoader.loadedClasses}")}
-        }
-        addons.removeIf { it.addonClassLoader != null && it.addonClassLoader.urlClassLoader == null }
+        addons.forEach { if (it.unloadable) it.unload() }
+        addons.removeIf { it.unloadable }
         addons.forEach { addon -> println("[Asterium Addons] Couldn't unload ${addon.addonMetaDataList.joinToString { it.name }}") }
     }
-
-    private fun shouldUnload(addonCore: AddonCore): Boolean {
-        return addonCore.addonMetaDataList.all { addonMetaData -> addonMetaData.unloadable }
-    }
-
 
     private fun loadExternalAddons() {
         val addonFiles = FileManager.addonsDirectory.listFiles { file -> file.extension == "jar" } ?: return
@@ -53,20 +45,6 @@ object AddonManager {
                 val addonClassLoader = AddonClassLoader(file.absolutePath)
                 addons.add(AddonCore(addonClassLoader.loadClassesInJar().map { featuredAddon: FeaturedAddon -> featuredAddon.getAddonMetaData() }, addonClassLoader))
             }
-
-//            val load :URLClassLoader = URLClassLoader.newInstance(arrayOf<URL>(file.toURI().toURL()))
-//            val cl = load.loadClass("asterium.${file.nameWithoutExtension.split("-").first()
-//                .lowercase(Locale.getDefault())}.${file.nameWithoutExtension.split("-").first()}")
-//            println("[Asterium Addons] Loading File from $file / asterium.${file.nameWithoutExtension.split("-").first()
-//                .lowercase(Locale.getDefault())}.${file.nameWithoutExtension.split("-").first()}")
-//            if (cl != null) {
-//                println("Found!")
-//                println(cl)
-//                if () {
-//                    println("Added!")
-//                    addons.add(cl.addonMetaData())
-//                }
-//            }
         }
     }
 }

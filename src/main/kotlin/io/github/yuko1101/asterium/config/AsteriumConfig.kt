@@ -32,7 +32,7 @@ class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
                 if (addonMetaData.addon.config() != null) {
                     addonMetaData.addon.config()!!.initialize()
                     button(addonMetaData.name, addonMetaData.description, addonMetaData.name, action = {
-                        Objects.requireNonNull(addonMetaData.addon.config()!!.gui())?.let { GuiUtil.open(it) }
+                        addonMetaData.addon.config()!!.gui()?.let { GuiUtil.open(it) }
                     })
                 }
             }

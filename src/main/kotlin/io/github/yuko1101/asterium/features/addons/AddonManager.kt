@@ -17,7 +17,7 @@ object AddonManager {
     }
 
     fun refreshAddons() {
-        unloadExternalAddons()
+        if (addons.isNotEmpty()) unloadExternalAddons()
         loadExternalAddons()
 
         Asterium.refreshConfig()
@@ -52,7 +52,7 @@ object AddonManager {
             } else {
                 println("[Asterium Addons] Loading $file")
                 val addonClassLoader = AddonClassLoader(file.absolutePath)
-                addons.add(AddonCore(addonClassLoader.loadClassesInJar().map { featuredAddon: FeaturedAddon -> featuredAddon.addonMetaData() }, addonClassLoader))
+                addons.add(AddonCore(addonClassLoader.loadClassesInJar().map { featuredAddon: FeaturedAddon -> featuredAddon.getAddonMetaData() }, addonClassLoader))
             }
 
 //            val load :URLClassLoader = URLClassLoader.newInstance(arrayOf<URL>(file.toURI().toURL()))

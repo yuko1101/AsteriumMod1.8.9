@@ -1,10 +1,8 @@
 package io.github.yuko1101.asterium.features.addons.arrowPath
 
-import com.google.gson.JsonParser
 import gg.essential.vigilance.Vigilant
 import io.github.yuko1101.asterium.features.addons.AddonMetaData
 import io.github.yuko1101.asterium.features.addons.FeaturedAddon
-import io.github.yuko1101.asterium.utils.ChatLib
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -23,7 +21,7 @@ class ArrowPath : FeaturedAddon() {
     }
 
     override fun addonMetaData(): AddonMetaData {
-        return AddonMetaData(this, "ArrowPath", "0.1.0", "矢の軌跡を表示します")
+        return AddonMetaData("ArrowPath", "0.1.0", "矢の軌跡を表示します")
     }
 
     override fun config(): Vigilant {

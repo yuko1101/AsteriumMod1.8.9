@@ -1,20 +1,17 @@
 package io.github.yuko1101.asterium
 
 import gg.essential.api.EssentialAPI
-import gg.essential.api.gui.Notifications
 import io.github.yuko1101.asterium.commands.AsteriumCommand
 import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.features.ChatChannel
 import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.arrowPath.ArrowPath
 import io.github.yuko1101.asterium.listener.Listener
-import io.github.yuko1101.asterium.utils.AddonClassLoader
 import io.github.yuko1101.asterium.utils.FileManager
-import io.github.yuko1101.asterium.utils.InventoryUtils
+import io.github.yuko1101.asterium.utils.minecraft.InventoryUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.multiplayer.ServerData
-import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
@@ -34,7 +31,7 @@ class Asterium {
     fun init(event: FMLInitializationEvent) {
         FileManager.init()
 
-        AddonManager.addons.add(AddonCore(listOf(ArrowPath().addonMetaData()), null))
+        AddonManager.addons.add(AddonCore(listOf(ArrowPath().getAddonMetaData()), null))
         AddonManager.refreshAddons()
 
         MinecraftForge.EVENT_BUS.register(this)
@@ -61,6 +58,7 @@ class Asterium {
     }
 
     companion object {
+        @JvmStatic
         val mc: Minecraft = Minecraft.getMinecraft()
 
         const val MODID = "asterium"

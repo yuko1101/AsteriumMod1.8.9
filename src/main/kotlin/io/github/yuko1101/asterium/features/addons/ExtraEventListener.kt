@@ -6,6 +6,7 @@ import net.minecraftforge.client.event.*
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.world.WorldEvent
+import net.minecraftforge.fml.common.eventhandler.Event
 import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
@@ -97,6 +98,8 @@ interface ExtraEventListener {
 //    fun onSoundEvent(event: SoundEvent) {}
 //    fun onSoundEventSoundSourceEvent(event: SoundEvent.SoundSourceEvent) {}
 
+
+    fun onEvent(event: Event) {}
 
 
 

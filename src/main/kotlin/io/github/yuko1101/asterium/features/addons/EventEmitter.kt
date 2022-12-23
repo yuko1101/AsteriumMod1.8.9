@@ -7,6 +7,7 @@ import net.minecraftforge.client.event.*
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.world.WorldEvent
+import net.minecraftforge.fml.common.eventhandler.Event
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -229,6 +230,11 @@ object EventEmitter {
     @SubscribeEvent
     fun onMainReceivePacketEvent(event: MainReceivePacketEvent<*, *>) {
         getListeners().forEach { listener -> listener.onMainReceivePacketEvent(event) }
+    }
+
+    @SubscribeEvent
+    fun onEvent(event: Event) {
+        getListeners().forEach { listener -> listener.onEvent(event) }
     }
 
 

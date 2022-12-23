@@ -18,9 +18,6 @@ class AddonClassLoader(val jarPath: String) {
     var loadedClasses = arrayListOf<String>()
 
     fun loadClassesInJar(): List<FeaturedAddon> {
-        val jarUrl: URL = File(jarPath).toURI().toURL()
-//        val urlClassLoader: URLClassLoader = URLClassLoader.newInstance(arrayOf(jarUrl), this.javaClass.classLoader)
-
         val result = arrayListOf<FeaturedAddon>()
         val jarFile = JarFile(jarPath)
         val entries: Enumeration<JarEntry> = jarFile.entries()
@@ -35,7 +32,10 @@ class AddonClassLoader(val jarPath: String) {
             // classファイルに限定
             val fileName = jarEntry.name
             if (!fileName.startsWith("asterium/")) continue
-            if (!fileName.endsWith(".class")) {
+
+            val fileExt = ".class"
+
+            if (!fileName.endsWith(fileExt)) {
                 continue
             }
 
@@ -46,23 +46,19 @@ class AddonClassLoader(val jarPath: String) {
 //            }
 
 
-            val clazz = Class.forName(fileName.substring(0, fileName.length - 6).replace('/', '.'), true, urlClassLoader)
-            println("[Asterium Addons] Searching for $fileName (${clazz.superclass}, ${clazz.superclass == FeaturedAddon::class}, ${clazz.superclass is FeaturedAddon}, ${clazz.superclass.toString() == FeaturedAddon::class.toString()}, ${FeaturedAddon::class.java.isAssignableFrom(clazz)})")
+            val clazz = Class.forName(fileName.substring(0, fileName.length - fileExt.length).replace('/', '.'), true, urlClassLoader)
+            println("[Asterium Addons] Searching for $fileName (${clazz.superclass}, ${clazz.superclass.toString() == FeaturedAddon::class.toString()}, ${FeaturedAddon::class.java.isAssignableFrom(clazz)})")
 
 
             // FeaturedAddonの派生型であることを確認
             if (clazz.superclass.toString() == FeaturedAddon::class.toString()) {
                 println("[Asterium Addons] Searching for $fileName (FeaturedAddon)")
-                // 引数なしコンストラクタを持つことを確認
-//            try {
-//                clazz.getConstructor()
-    //            } catch (e: NoSuchMethodException) {
-//                continue
-//            }
 
+                val constructor =  clazz.getConstructor()
+                val instance = constructor.newInstance()
 
-                result.add(clazz.newInstance() as FeaturedAddon)
-                loadedClasses.add("class " + fileName.substring(0, fileName.length - 6).replace('/', '.'))
+                result.add(instance as FeaturedAddon)
+                loadedClasses.add("class " + fileName.substring(0, fileName.length - fileExt.length).replace('/', '.'))
                 println("[Asterium Addons] Addon $fileName found!")
             }
 

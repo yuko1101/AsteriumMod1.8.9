@@ -1,7 +1,7 @@
 package io.github.yuko1101.asterium.events
 
 import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.utils.ChatLib
+import io.github.yuko1101.asterium.utils.minecraft.ChatLib
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.Event
 

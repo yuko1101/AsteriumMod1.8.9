@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.utils
+package io.github.yuko1101.asterium.utils.minecraft
 
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack

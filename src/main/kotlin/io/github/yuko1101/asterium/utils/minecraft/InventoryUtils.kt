@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.utils
+package io.github.yuko1101.asterium.utils.minecraft
 
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.item.ItemStack

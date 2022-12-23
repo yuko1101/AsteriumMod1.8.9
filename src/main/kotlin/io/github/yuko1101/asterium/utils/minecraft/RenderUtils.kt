@@ -23,9 +23,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yuko1101.asterium.utils
+package io.github.yuko1101.asterium.utils.minecraft
 
-import gg.essential.universal.UResolution
 import io.github.yuko1101.asterium.Asterium.Companion.mc
 import io.github.yuko1101.asterium.utils.hypixel.skyblock.SkyblockItemRarity
 import io.github.yuko1101.asterium.utils.hypixel.skyblock.SkyblockItemUtils
@@ -305,6 +304,7 @@ object RenderUtils {
      * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
      * @author bowser0000
      */
+    @JvmStatic
     fun draw3DLine(pos1: Vec3, pos2: Vec3, width: Int, color: Color, partialTicks: Float) {
         val render = mc.renderViewEntity
         val worldRenderer = Tessellator.getInstance().worldRenderer

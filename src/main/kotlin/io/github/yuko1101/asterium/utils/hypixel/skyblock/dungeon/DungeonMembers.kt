@@ -2,15 +2,13 @@ package io.github.yuko1101.asterium.utils.hypixel.skyblock.dungeon
 
 import gg.essential.api.utils.Multithreading
 import gg.essential.universal.UChat
-import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.Asterium.Companion.mc
 import io.github.yuko1101.asterium.features.addons.Intents
-import io.github.yuko1101.asterium.utils.ChatLib
+import io.github.yuko1101.asterium.utils.minecraft.ChatLib
 import io.github.yuko1101.asterium.utils.NumberUtil.romanToDecimal
 import io.github.yuko1101.asterium.utils.StringUtils.withoutColorCodes
 import io.github.yuko1101.asterium.utils.hypixel.HypixelLocations
 import io.github.yuko1101.asterium.utils.minecraft.TabListUtils
-import io.github.yuko1101.asterium.utils.minecraft.TabListUtils.text
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent

@@ -22,7 +22,7 @@ class ArrowPathConfig : Vigilant(File("./asterium/config/ArrowPath.toml")) {
         description = "軌跡の線の色を変更できます",
         category = "System"
     )
-    var color = Color.WHITE
+    var color: Color = Color.WHITE
 
     @Property(
         type = PropertyType.SLIDER,

@@ -23,8 +23,9 @@ class ChatChannel {
 
         fun onRender() {
 
-            lastPrivatePlayer = File(FileManager.getClientDirectory(), "data.json").getFromJson("lastPrivatePlayer", lastPrivatePlayer)?: ""
-            chatChannel = File(FileManager.getClientDirectory(), "data.json").getFromJson("lastChatChannel", chatChannel)?: ""
+            lastPrivatePlayer =
+                File(FileManager.clientDirectory, "data.json").getFromJson("lastPrivatePlayer", lastPrivatePlayer)
+            chatChannel = File(FileManager.clientDirectory, "data.json").getFromJson("lastChatChannel", chatChannel)
             y = Asterium.scaledResolution.scaledHeight - font.FONT_HEIGHT * 2 - 5
             val screen = Minecraft.getMinecraft().currentScreen
             if (screen !is GuiChat) return
@@ -54,8 +55,8 @@ class ChatChannel {
                 lastPrivatePlayer = event.message.formattedText.replace("§aOpened a chat conversation with (.*)§a for the next 5 minutes. Use §r§b/chat a§r§a to leave§r".toRegex(), "$1")
                 chatChannel = "private"
             }
-            if (preChatChannel != chatChannel) File(FileManager.getClientDirectory(), "data.json").setToJson("lastChatChannel", chatChannel)
-            if (preLastPrivatePlayer != lastPrivatePlayer) File(FileManager.getClientDirectory(), "data.json").setToJson("lastPrivatePlayer", lastPrivatePlayer)
+            if (preChatChannel != chatChannel) File(FileManager.clientDirectory, "data.json").setToJson("lastChatChannel", chatChannel)
+            if (preLastPrivatePlayer != lastPrivatePlayer) File(FileManager.clientDirectory, "data.json").setToJson("lastPrivatePlayer", lastPrivatePlayer)
         }
     }
 }

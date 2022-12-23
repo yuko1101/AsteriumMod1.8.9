@@ -4,7 +4,6 @@ import gg.essential.api.utils.GuiUtil
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
-import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.features.addons.AddonManager
 import java.io.File
 import java.util.*

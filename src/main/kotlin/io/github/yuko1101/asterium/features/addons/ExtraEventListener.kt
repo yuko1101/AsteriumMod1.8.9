@@ -3,7 +3,6 @@ package io.github.yuko1101.asterium.features.addons
 import io.github.yuko1101.asterium.events.impl.MainReceivePacketEvent
 import io.github.yuko1101.asterium.events.impl.PacketEvent
 import net.minecraftforge.client.event.*
-import net.minecraftforge.client.event.sound.SoundEvent
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.world.WorldEvent

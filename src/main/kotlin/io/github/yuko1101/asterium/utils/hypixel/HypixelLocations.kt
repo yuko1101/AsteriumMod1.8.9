@@ -12,7 +12,7 @@ object HypixelLocations {
         get() = isOnHypixel && ScoreboardUtils.getSidebarTitle()?.withoutColorCodes()?.contains("SKYBLOCK") ?: false
 
     val inCatacombs: Boolean
-        get() = inSkyblock && ScoreboardUtils.getSidebarLines().any { line -> line.withoutColorCodes().contains("The Catacombs") } ?: false
+        get() = inSkyblock
 
     val inDungeons: Boolean
         get() = inSkyblock && (inCatacombs) // if new type of dungeons added, add here like this: inSkyblock && (inCatacombs || inNewType)

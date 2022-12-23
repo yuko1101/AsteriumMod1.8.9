@@ -10,7 +10,7 @@ import java.io.IOException
 class FileUtils {
     companion object {
         fun getConfig(): JsonObject {
-            return JsonParser().parse(FileManager.readFromJson(File(FileManager.getClientDirectory(), "config.json"), "{}")).asJsonObject
+            return JsonParser().parse(FileManager.readFromJson(File(FileManager.clientDirectory, "config.json"), "{}")).asJsonObject
         }
 
         fun File.readAsJson() : JsonElement {

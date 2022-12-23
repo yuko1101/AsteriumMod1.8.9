@@ -1,7 +1,5 @@
 package io.github.yuko1101.asterium.utils
 
-import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.features.addons.ExtraEventListener
 import io.github.yuko1101.asterium.features.addons.FeaturedAddon
 import java.io.File
 import java.net.URL

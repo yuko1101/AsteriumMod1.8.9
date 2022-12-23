@@ -1,7 +1,6 @@
 package io.github.yuko1101.asterium.features.addons
 
 import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.features.addons.arrowPath.ArrowPath
 import io.github.yuko1101.asterium.utils.AddonClassLoader
 import io.github.yuko1101.asterium.utils.FileManager
 
@@ -45,7 +44,7 @@ object AddonManager {
 
 
     private fun loadExternalAddons() {
-        val addonFiles = FileManager.getAddonsDirectory().listFiles { file -> file.extension == "jar" } ?: return
+        val addonFiles = FileManager.addonsDirectory.listFiles { file -> file.extension == "jar" } ?: return
         addonFiles.forEach { file ->
             if (addons.any { it.addonClassLoader?.jarPath == file.absolutePath }) {
                 println("[Asterium Addons] Skipped loading $file because it has already loaded")

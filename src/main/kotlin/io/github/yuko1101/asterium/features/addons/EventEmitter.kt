@@ -1,10 +1,8 @@
 package io.github.yuko1101.asterium.features.addons
 
-import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.events.impl.MainReceivePacketEvent
 import io.github.yuko1101.asterium.events.impl.PacketEvent
 import net.minecraft.client.Minecraft
-import net.minecraft.entity.passive.EntityBat
 import net.minecraftforge.client.event.*
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent

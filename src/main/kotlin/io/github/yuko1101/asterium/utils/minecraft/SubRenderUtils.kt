@@ -53,10 +53,10 @@ class SubRenderUtils {
             worldRenderer.pos((j + 1).toDouble(), (-1 + b0).toDouble(), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
             tessellator.draw()
             GlStateManager.enableTexture2D()
-            fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, b0.toInt(), 553648127);
-            GlStateManager.enableDepth();
-            GlStateManager.depthMask(true);
-            fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, b0.toInt(), -1);
+            fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, b0.toInt(), 553648127)
+            GlStateManager.enableDepth()
+            GlStateManager.depthMask(true)
+            fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, b0.toInt(), -1)
             GlStateManager.enableLighting()
             GlStateManager.disableBlend()
             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f)
@@ -151,9 +151,9 @@ class SubRenderUtils {
                     pos[1] * height,
                     pos[2] * width
                 ).color(color.red.toFloat() / 255.0f, color.green.toFloat() / 255.0f, color.blue.toFloat() / 255.0f, color.alpha.toFloat() / 255.0f).endVertex()
-                counter++;
+                counter++
                 if (counter % 2 == 0) {
-                    tessellator.draw();
+                    tessellator.draw()
                     if (counter != 24) {
                         worldRenderer.begin(3, DefaultVertexFormats.POSITION_COLOR)
                     }

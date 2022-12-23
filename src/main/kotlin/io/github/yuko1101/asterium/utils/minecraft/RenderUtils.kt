@@ -820,4 +820,4 @@ object RenderUtils {
 fun Color.bindColor() = GlStateManager.color(this.red / 255f, this.green / 255f, this.blue / 255f, this.alpha / 255f)
 fun Color.withAlpha(alpha: Int): Int = (alpha.coerceIn(0, 255) shl 24) or (this.rgb and 0x00ffffff)
 
-fun AxisAlignedBB.expandBlock() = expand(0.0020000000949949026, 0.0020000000949949026, 0.0020000000949949026)
+fun AxisAlignedBB.expandBlock(): AxisAlignedBB = expand(0.0020000000949949026, 0.0020000000949949026, 0.0020000000949949026)

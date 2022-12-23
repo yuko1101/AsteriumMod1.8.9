@@ -1,188 +1,67 @@
-package io.github.yuko1101.asterium.utils;
+package io.github.yuko1101.asterium.utils
 
-import com.google.gson.Gson;
+import java.io.*
 
-import java.io.*;
-
-public class FileManager {
-
-    private static final Gson gson = new Gson();
-
-    private static final File ROOT_DIR = new File("asterium");
-    private static final File CONFIG_DIR = new File(ROOT_DIR, "config");
-    private static final File ADDONS_DIR = new File(ROOT_DIR, "addons");
-    private static final File COSMETICS_DIR = new File(ROOT_DIR, "cosmetics");
-
-    public static void init() {
-
-        if (!ROOT_DIR.exists()) { ROOT_DIR.mkdirs(); }
-        if (!CONFIG_DIR.exists()) { CONFIG_DIR.mkdirs(); }
-        if (!ADDONS_DIR.exists()) { ADDONS_DIR.mkdirs(); }
-        if (!COSMETICS_DIR.exists()) { COSMETICS_DIR.mkdirs(); }
-
-
+object FileManager {
+    val clientDirectory = File("asterium")
+    val modsDirectory = File(clientDirectory, "config")
+    val addonsDirectory = File(clientDirectory, "addons")
+    val cosmeticsDirectory = File(clientDirectory, "cosmetics")
+    fun init() {
+        if (!clientDirectory.exists()) {
+            clientDirectory.mkdirs()
+        }
+        if (!modsDirectory.exists()) {
+            modsDirectory.mkdirs()
+        }
+        if (!addonsDirectory.exists()) {
+            addonsDirectory.mkdirs()
+        }
+        if (!cosmeticsDirectory.exists()) {
+            cosmeticsDirectory.mkdirs()
+        }
     }
 
-    public static Gson getGson() {
-        return gson;
-    }
-
-    public static File getModsDirectory() {
-        return CONFIG_DIR;
-    }
-
-    public static File getAddonsDirectory() {
-        return ADDONS_DIR;
-    }
-
-    public static File getCosmeticsDirectory() {
-        return COSMETICS_DIR;
-    }
-
-    public static File getClientDirectory() {
-        return ROOT_DIR;
-    }
-
-    public static boolean writeJsonToFile(File file, Object obj) {
-        try {
+    fun writeToFile(file: File, str: String): Boolean {
+        return try {
             if (!file.exists()) {
-                file.createNewFile();
+                file.createNewFile()
             }
-
-            FileOutputStream outputStream = new FileOutputStream(file);
-            outputStream.write(gson.toJson(obj).getBytes());
-            outputStream.flush();
-            outputStream.close();
-            return true;
+            val outputStream = FileOutputStream(file)
+            outputStream.write(str.toByteArray())
+            outputStream.flush()
+            outputStream.close()
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
         }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
     }
 
-    public static <T extends Object> T readFromJson(File file, Class<T> c) {
-
-        try {
+    fun readFromJson(file: File, str: String): String? {
+        return try {
             if (!file.exists()) {
-                file.createNewFile();
+                file.createNewFile()
+                val outputStream = FileOutputStream(file)
+                outputStream.write(str.toByteArray())
+                outputStream.flush()
+                outputStream.close()
             }
-
-            FileInputStream fileInputStream = new FileInputStream(file);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            StringBuilder builder = new StringBuilder();
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                builder.append(line);
+            val fileInputStream = FileInputStream(file)
+            val inputStreamReader = InputStreamReader(fileInputStream)
+            val bufferedReader = BufferedReader(inputStreamReader)
+            val builder = StringBuilder()
+            var line: String?
+            while (bufferedReader.readLine().also { line = it } != null) {
+                builder.append(line)
             }
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-            return gson.fromJson(builder.toString(), c);
-
+            bufferedReader.close()
+            inputStreamReader.close()
+            fileInputStream.close()
+            builder.toString()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
         }
-        catch(IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-    public static <T extends Object> T readFromJson(File file, Class<T> c, Object obj) {
-
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(gson.toJson(obj).getBytes());
-                outputStream.flush();
-                outputStream.close();
-
-            }
-
-            FileInputStream fileInputStream = new FileInputStream(file);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            StringBuilder builder = new StringBuilder();
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                builder.append(line);
-            }
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-            return gson.fromJson(builder.toString(), c);
-
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-    public static boolean writeToFile(File file, String str) {
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileOutputStream outputStream = new FileOutputStream(file);
-            outputStream.write(str.getBytes());
-            outputStream.flush();
-            outputStream.close();
-            return true;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-    public static String readFromJson(File file, String str) {
-
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(str.getBytes());
-                outputStream.flush();
-                outputStream.close();
-
-            }
-
-            FileInputStream fileInputStream = new FileInputStream(file);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            StringBuilder builder = new StringBuilder();
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                builder.append(line);
-            }
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-
-            return builder.toString();
-
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
     }
 }

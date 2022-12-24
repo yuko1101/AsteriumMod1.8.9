@@ -1,12 +1,16 @@
 package io.github.yuko1101.asterium.utils
 
+import com.google.gson.JsonParser
 import io.github.yuko1101.asterium.features.addons.FeaturedAddon
+import org.apache.commons.io.IOUtils
 import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
+import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
+import java.util.zip.ZipEntry
 
 
 class AddonClassLoader(val jarPath: String) {
@@ -20,6 +24,24 @@ class AddonClassLoader(val jarPath: String) {
     fun loadClassesInJar(): List<FeaturedAddon> {
         val result = arrayListOf<FeaturedAddon>()
         val jarFile = JarFile(jarPath)
+
+        val searchPaths = arrayListOf<String>()
+
+        val addonMetaFile: ZipEntry? = jarFile.getEntry("asterium.addon.json")
+        if (addonMetaFile != null) {
+            try {
+                val inputStream = jarFile.getInputStream(addonMetaFile)
+                val content = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
+                val json = JsonParser().parse(content)
+                val paths = json.asJsonObject["addons"].asJsonArray.map { it.asJsonObject["path"].asString }
+                searchPaths.addAll(paths)
+            } catch (e: Exception) {
+                println("Unknown error occurred while reading asterium.addon.json in $jarPath")
+                e.printStackTrace()
+                return result
+            }
+        }
+
         val entries: Enumeration<JarEntry> = jarFile.entries()
         while (entries.hasMoreElements()) {
 
@@ -29,12 +51,12 @@ class AddonClassLoader(val jarPath: String) {
                 continue
             }
 
-            // classファイルに限定
             val fileName = jarEntry.name
-            if (!fileName.startsWith("asterium/")) continue
+            if (!searchPaths.contains(fileName) && !(searchPaths.isEmpty() && fileName.startsWith("asterium/"))) continue
 
+
+            // classファイルに限定
             val fileExt = ".class"
-
             if (!fileName.endsWith(fileExt)) {
                 continue
             }

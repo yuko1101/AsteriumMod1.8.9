@@ -11,10 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = NetHandlerPlayClient.class, priority = 1001)
 public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
-    //TODO: resolve issue that onSendPacket does not work
     @Inject(method = "addToSendQueue", at = @At("HEAD"), cancellable = true)
     private void onSendPacket(Packet<?> packet, CallbackInfo ci) {
-        System.out.println("send packet");
         NetHandlerPlayClientHookKt.onSendPacket(packet, ci);
     }
 }

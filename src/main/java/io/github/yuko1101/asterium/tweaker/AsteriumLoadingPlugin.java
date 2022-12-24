@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
-@IFMLLoadingPlugin.Name("Asterium On Top")
+@IFMLLoadingPlugin.Name("Asterium")
 @IFMLLoadingPlugin.SortingIndex(69)
 public class AsteriumLoadingPlugin implements IFMLLoadingPlugin {
     private final AsteriumLoadingPluginKt kotlinPlugin;

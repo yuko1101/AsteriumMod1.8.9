@@ -45,14 +45,6 @@ public class AsteriumLoadingPlugin implements IFMLLoadingPlugin {
             showMessage(kotlinErrorMessage + "<br>The culprit seems to be " + name + "<br>It bundles version " + KotlinVersion.CURRENT + "</p></html>");
             exit();
         }
-        if (checkForClass("com.sky.voidchat.EDFMLLoadingPlugin")) {
-            showMessage(voidChatMessage);
-            exit();
-        }
-        if (checkForClass("me.guichaguri.betterfps.BetterFpsHelper")) {
-            showMessage(betterFPSMessage);
-            exit();
-        }
         kotlinPlugin = new AsteriumLoadingPluginKt();
     }
 
@@ -176,28 +168,6 @@ public class AsteriumLoadingPlugin implements IFMLLoadingPlugin {
                     "ask for support in the Discord." +
                     "</p></html>";
 
-    private static final String voidChatMessage =
-            "<html><p>" +
-                    "Asterium has detected that you are using VoidChat.<br>" +
-                    "VoidChat breaks many of my features!<br>" +
-                    "In order to resolve this conflict you must remove<br>" +
-                    "VoidChat from your Minecraft mods folder.<br>" +
-                    "A good alternative is Patcher at https://sk1er.club/mods/Patcher.<br>" +
-                    "If you have already done this and are still getting this error,<br>" +
-                    "ask for support in the Discord." +
-                    "</p></html>";
-
-    private static final String betterFPSMessage =
-            "<html><p>" +
-                    "Asterium has detected that you are using BetterFPS.<br>" +
-                    "BetterFPS breaks my core plugins, and also breaks the game!<br>" +
-                    "In order to resolve this conflict you must remove<br>" +
-                    "BetterFPS from your Minecraft mods folder.<br>" +
-                    "You probably will not notice a change in your FPS.<br>" +
-                    "Video showcasing breaking changes: https://streamable.com/q4ip5u.<br>" +
-                    "If you have already done this and are still getting this error,<br>" +
-                    "ask for support in the Discord." +
-                    "</p></html>";
 
     @Override
     public String[] getASMTransformerClass() {

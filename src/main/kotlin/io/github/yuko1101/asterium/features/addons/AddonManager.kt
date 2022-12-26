@@ -1,7 +1,6 @@
 package io.github.yuko1101.asterium.features.addons
 
 import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.utils.AddonClassLoader
 import io.github.yuko1101.asterium.utils.FileManager
 
 object AddonManager {

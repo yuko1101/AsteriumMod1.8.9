@@ -1,7 +1,6 @@
-package io.github.yuko1101.asterium.utils
+package io.github.yuko1101.asterium.features.addons
 
 import com.google.gson.JsonParser
-import io.github.yuko1101.asterium.features.addons.FeaturedAddon
 import org.apache.commons.io.IOUtils
 import java.io.File
 import java.net.URL

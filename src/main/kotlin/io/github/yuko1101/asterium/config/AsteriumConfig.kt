@@ -6,7 +6,6 @@ import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import io.github.yuko1101.asterium.features.addons.AddonManager
 import java.io.File
-import java.util.*
 
 class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
 
@@ -17,17 +16,6 @@ class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
         category = "System"
     )
     var isEnabled = true
-
-    @Property(
-        type = PropertyType.SLIDER,
-        name = "HUD Object Scale",
-        description = "Scale of HUD Objects",
-        category = "HUD",
-        min = 1,
-        max = 100
-    )
-    var scale = 10
-
 
     fun initAddons() {
         category("Addons") {

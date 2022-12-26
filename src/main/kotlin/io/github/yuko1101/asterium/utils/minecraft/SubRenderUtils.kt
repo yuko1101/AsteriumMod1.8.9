@@ -19,10 +19,8 @@ import net.minecraftforge.client.event.RenderLivingEvent
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-
 class SubRenderUtils {
     companion object {
-
 
         private fun renderText(renderer: RendererLivingEntity<*>, entity: Entity, text: String, x: Double, y: Double, z: Double, height: Boolean = true) {
             val fontRenderer: FontRenderer = renderer.fontRendererFromRenderManager
@@ -166,7 +164,7 @@ class SubRenderUtils {
             GL11.glPopMatrix()
         }
 
-        fun drawLine(x: Double, y: Double, z: Double, x2: Double, y2: Double, z2:Double, color: Color, lineWidth: Int) {
+        fun drawLine(x: Double, y: Double, z: Double, x2: Double, y2: Double, z2: Double, color: Color, lineWidth: Int) {
             GL11.glPushMatrix()
             GlStateManager.translate(x, y, z)
             GL11.glNormal3f(0.0f, 1.0f, 0.0f)

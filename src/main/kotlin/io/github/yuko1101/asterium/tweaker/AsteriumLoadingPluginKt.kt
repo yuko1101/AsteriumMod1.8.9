@@ -1,5 +1,6 @@
 package io.github.yuko1101.asterium.tweaker
 
+import io.github.yuko1101.asterium.asm.AsteriumTransformer
 import io.github.yuko1101.asterium.utils.StringUtils.startsWithAny
 import net.minecraft.launchwrapper.Launch
 import net.minecraftforge.common.ForgeVersion
@@ -78,7 +79,7 @@ class AsteriumLoadingPluginKt : IFMLLoadingPlugin {
     }
 
     override fun getASMTransformerClass(): Array<String> {
-        return arrayOf("io.github.yuko1101.asterium.asm.AsteriumTransformer")
+        return arrayOf(AsteriumTransformer::class.java.name)
     }
 
     override fun getModContainerClass(): String? {
@@ -89,8 +90,7 @@ class AsteriumLoadingPluginKt : IFMLLoadingPlugin {
         return null
     }
 
-    override fun injectData(data: MutableMap<String, Any>?) {
-        Launch.classLoader.addTransformerExclusion("io.github.yuko1101.asterium.utils.ModChecker")
+    override fun injectData(map: MutableMap<String, Any>?) {
     }
 
     override fun getAccessTransformerClass(): String? {
@@ -129,7 +129,7 @@ class AsteriumLoadingPluginKt : IFMLLoadingPlugin {
         JOptionPane.showOptionDialog(
             frame,
             errorMessage,
-            "Skytils Error",
+            "Asterium Error",
             JOptionPane.DEFAULT_OPTION,
             JOptionPane.ERROR_MESSAGE,
             icon,
@@ -143,7 +143,7 @@ class AsteriumLoadingPluginKt : IFMLLoadingPlugin {
         AsteriumLoadingPlugin.exit()
     }
 
-    fun createButton(text: String, onClick: JButton.() -> Unit): JButton {
+    private fun createButton(text: String, onClick: JButton.() -> Unit): JButton {
         return JButton(text).apply {
             addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent) {

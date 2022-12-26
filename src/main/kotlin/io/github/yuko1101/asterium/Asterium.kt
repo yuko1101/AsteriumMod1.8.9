@@ -6,6 +6,7 @@ import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.features.ChatChannel
 import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.arrowPath.ArrowPath
+import io.github.yuko1101.asterium.features.addons.hud.HUDManager
 import io.github.yuko1101.asterium.listener.Listener
 import io.github.yuko1101.asterium.utils.FileManager
 import io.github.yuko1101.asterium.utils.minecraft.InventoryUtils
@@ -63,12 +64,17 @@ class Asterium {
 
         const val MODID = "asterium"
         const val VERSION = "0.2.0"
+
+        @JvmStatic
         var config = AsteriumConfig()
 
         var API_KEY = arrayListOf<String>()
         var keyNumber = -1
 
         var scaledResolution = ScaledResolution(mc)
+
+        @JvmStatic
+        val hudManager = HUDManager()
 
         fun getServerIP(): String? {
             val server: ServerData? = Minecraft.getMinecraft().currentServerData

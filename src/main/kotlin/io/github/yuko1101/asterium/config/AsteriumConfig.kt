@@ -18,6 +18,16 @@ class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
     )
     var isEnabled = true
 
+    @Property(
+        type = PropertyType.SLIDER,
+        name = "HUD Object Scale",
+        description = "Scale of HUD Objects",
+        category = "HUD",
+        min = 1,
+        max = 100
+    )
+    var scale = 10
+
 
     fun initAddons() {
         category("Addons") {

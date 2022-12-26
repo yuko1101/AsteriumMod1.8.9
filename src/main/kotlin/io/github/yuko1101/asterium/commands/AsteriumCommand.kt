@@ -6,6 +6,7 @@ import gg.essential.api.commands.SubCommand
 import gg.essential.api.utils.GuiUtil
 import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.features.addons.AddonManager
+import io.github.yuko1101.asterium.features.addons.hud.HUDEditScreen
 import io.github.yuko1101.asterium.utils.minecraft.ChatLib
 import java.util.*
 
@@ -32,5 +33,10 @@ class AsteriumCommand : Command("asterium") {
     fun unload() {
         AddonManager.unload()
         ChatLib.chat("アンロードしました！")
+    }
+
+    @SubCommand(value = "hud", description = "Open HUD edit screen.")
+    fun openHUDEditScreen() {
+        GuiUtil.open(HUDEditScreen())
     }
 }

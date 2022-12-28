@@ -1,15 +1,20 @@
 package io.github.yuko1101.asterium.utils.minecraft
 
+import io.github.yuko1101.asterium.Asterium
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 
 object DrawUtils {
-    fun drawChromaString(string: String, x: Int, y: Int, shadow: Boolean) {
-        val mc = Minecraft.getMinecraft()
+
+    private val mc = Asterium.mc
+    private val tessellator = Tessellator.getInstance()
+    private val worldRenderer = tessellator.worldRenderer
+
+    fun drawChromaString(string: String, x: Float, y: Float, shadow: Boolean) {
         var xTmp = x
 
         var formatMode = false
@@ -35,39 +40,53 @@ object DrawUtils {
         }
     }
 
-    fun drawRect(
-        x: Float,
-        y: Float,
-        u: Float,
-        v: Float,
-        uWidth: Float,
-        vHeight: Float,
-        width: Float,
-        height: Float,
-        tileWidth: Float,
-        tileHeight: Float,
-        linearTexture: Boolean
-    ) {
-        if (linearTexture) {
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR)
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR)
-        }
-        val f = 1.0f / tileWidth
-        val f1 = 1.0f / tileHeight
-        val tessellator = Tessellator.getInstance()
-        val worldRenderer = tessellator.worldRenderer
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX)
-        worldRenderer.pos(x.toDouble(), (y + height).toDouble(), 0.0)
-            .tex((u * f).toDouble(), ((v + vHeight) * f1).toDouble()).endVertex()
-        worldRenderer.pos((x + width).toDouble(), (y + height).toDouble(), 0.0)
-            .tex(((u + uWidth) * f).toDouble(), ((v + vHeight) * f1).toDouble()).endVertex()
-        worldRenderer.pos((x + width).toDouble(), y.toDouble(), 0.0)
-            .tex(((u + uWidth) * f).toDouble(), (v * f1).toDouble()).endVertex()
-        worldRenderer.pos(x.toDouble(), y.toDouble(), 0.0).tex((u * f).toDouble(), (v * f1).toDouble()).endVertex()
-        tessellator.draw()
-        if (linearTexture) {
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
-        }
+    fun drawHollowRect(x1: Float, y1: Float, x2: Float, y2: Float, width: Float, color: Long) {
+        drawLine(x1, y1, x1, y2, width, color)
+        drawLine(x1, y1, x2, y1, width, color)
+        drawLine(x1, y2, x2, y2, width, color)
+        drawLine(x2, y1, x2, y2, width, color)
+    }
+
+    /**
+     * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
+     * Modified
+     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+     * @author Moulberry (Modified)
+     */
+    fun drawLine(sx: Float, sy: Float, ex: Float, ey: Float, width: Float, color: Long) {
+        val f = (color shr 24 and 255).toFloat() / 255.0f
+        val f1 = (color shr 16 and 255).toFloat() / 255.0f
+        val f2 = (color shr 8 and 255).toFloat() / 255.0f
+        val f3 = (color and 255).toFloat() / 255.0f
+        GlStateManager.pushMatrix()
+        GlStateManager.disableTexture2D()
+        GlStateManager.enableBlend()
+        GlStateManager.disableAlpha()
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
+        GlStateManager.color(f1, f2, f3, f)
+        GL11.glLineWidth(width)
+        GL11.glBegin(GL11.GL_LINES)
+        GL11.glVertex2d(sx.toDouble(), sy.toDouble())
+        GL11.glVertex2d(ex.toDouble(), ey.toDouble())
+        GL11.glEnd()
+        GlStateManager.disableBlend()
+        GlStateManager.enableAlpha()
+        GlStateManager.enableTexture2D()
+        GlStateManager.popMatrix()
+    }
+
+    /**
+     * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
+     * Modified
+     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+     * @author Moulberry (Modified)
+     */
+    fun drawDottedLine(sx: Float, sy: Float, ex: Float, ey: Float, width: Float, factor: Int, color: Long) {
+        GlStateManager.pushMatrix()
+        GL11.glLineStipple(factor, 0xAAAA.toShort())
+        GL11.glEnable(GL11.GL_LINE_STIPPLE)
+        drawLine(sx, sy, ex, ey, width, color)
+        GL11.glDisable(GL11.GL_LINE_STIPPLE)
+        GlStateManager.popMatrix()
     }
 }

@@ -22,7 +22,7 @@ object InventoryUtils {
 
     @SubscribeEvent
     fun onMouseInputEvent(event: GuiScreenEvent.MouseInputEvent.Pre) {
-        println("Mouse ${Mouse.getEventButton()} is pressed")
+//        println("Mouse ${Mouse.getEventButton()} is pressed")
         if (event.gui is GuiContainer) {
             val allListeners = listeners + temporaryListeners
             for (listener in allListeners) {

@@ -7,14 +7,14 @@ import kotlin.math.max
 
 abstract class DraggableFeature : HUDFeature() {
     open val defaultPosition: ScreenPosition = AbsoluteScreenPosition(0F, 0F)
-    open val defaultScale: Int = 50
+    open val defaultScale: Float = 1F
 
-    var scale: Int
+    var scale: Float
         get() {
             if (!Asterium.hudManager.hudConfig.has(key)) {
                 return defaultScale
             }
-            return Asterium.hudManager.hudConfig.get(key).getValue("scale").asInt
+            return Asterium.hudManager.hudConfig.get(key).getValue("scale").asFloat
         }
         set(value) {
             Asterium.hudManager.hudConfig.get(key).set("scale", value)

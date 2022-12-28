@@ -4,6 +4,8 @@ import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.features.addons.FeaturedAddon
 import io.github.yuko1101.asterium.features.addons.hud.position.AbsoluteScreenPosition
 import io.github.yuko1101.asterium.features.addons.hud.position.ScreenPosition
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.FontRenderer
 import kotlin.math.max
 
 abstract class HUDFeature {
@@ -41,6 +43,14 @@ abstract class HUDFeature {
      */
     fun save() {
         Asterium.hudManager.hudConfig.save(compact = false)
+    }
+
+    val mc: Minecraft by lazy {
+        Asterium.mc
+    }
+
+    val font: FontRenderer by lazy {
+        Asterium.mc.fontRendererObj
     }
 
     companion object {

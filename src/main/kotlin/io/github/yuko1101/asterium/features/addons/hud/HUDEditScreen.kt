@@ -23,7 +23,7 @@ class HUDEditScreen : GuiScreen() {
     override fun keyTyped(typedChar: Char, keyCode: Int) {
         when (keyCode) {
             Keyboard.KEY_ESCAPE -> {
-                GuiUtil.open(null)
+                mc.displayGuiScreen(null)
             }
         }
     }

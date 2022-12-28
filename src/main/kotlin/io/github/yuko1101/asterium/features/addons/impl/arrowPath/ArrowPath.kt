@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.features.addons.arrowPath
+package io.github.yuko1101.asterium.features.addons.impl.arrowPath
 
 import gg.essential.vigilance.Vigilant
 import io.github.yuko1101.asterium.features.addons.AddonMetaData

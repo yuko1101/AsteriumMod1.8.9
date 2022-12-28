@@ -20,9 +20,8 @@ class HUDEditScreen : GuiScreen() {
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         for (feature in features) {
             GlStateManager.pushMatrix()
-            val scale = feature.scale
             GlStateManager.translate(feature.position.x, feature.position.y, 0f)
-            GlStateManager.scale(scale.toDouble(), scale.toDouble(), 1.0)
+            GlStateManager.scale(feature.scale.toDouble(), feature.scale.toDouble(), 1.0)
             feature.renderDummy()
             DrawUtils.drawHollowRect(0F, 0F, feature.width, feature.height, 0.5F, 0xFFFFFFFF)
             GlStateManager.popMatrix()

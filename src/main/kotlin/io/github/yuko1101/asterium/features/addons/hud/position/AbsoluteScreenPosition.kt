@@ -2,13 +2,14 @@ package io.github.yuko1101.asterium.features.addons.hud.position
 
 import com.google.gson.JsonObject
 
-class AbsoluteScreenPosition(override var x: Int, override var y: Int) : ScreenPosition() {
-    companion object {
-        fun getFromJSON(json: JsonObject): AbsoluteScreenPosition {
-            val x = json["x"].asInt
-            val y = json["y"].asInt
-            return AbsoluteScreenPosition(x, y)
-        }
+class AbsoluteScreenPosition(override var x: Float, override var y: Float) : ScreenPosition() {
+
+    override fun toJSON(): JsonObject {
+        val json = JsonObject()
+        json.addProperty("type", "absolute")
+        json.addProperty("x", x)
+        json.addProperty("y", y)
+        return json
     }
 
 }

@@ -18,6 +18,6 @@ class HUDManager {
         _features.remove(feature)
     }
 
-    val positionConfig = ConfigFile(File("./asterium/pos.json"), JsonObject()).load()
+    val hudConfig = ConfigFile(File("./asterium/hud.json"), JsonObject()).load()
 
 }

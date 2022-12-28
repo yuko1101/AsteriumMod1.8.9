@@ -13,12 +13,12 @@ class TestHud : DraggableFeature() {
     override val addon: FeaturedAddon
         get() = Huds.instance
     override val height: Float
-        get() = scale * font.FONT_HEIGHT
+        get() = font.FONT_HEIGHT.toFloat()
     override val width: Float
-        get() = font.getStringWidth(text).toFloat() * scale
+        get() = font.getStringWidth(text).toFloat()
 
     override fun render() {
-        font.drawStringWithShadow(text, position.x, position.y, ChatColor.GRAY.color!!.rgb)
+        font.drawStringWithShadow(text, 0F, 0F, ChatColor.GRAY.color!!.rgb)
     }
 
 }

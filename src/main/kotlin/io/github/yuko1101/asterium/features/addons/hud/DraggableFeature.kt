@@ -11,7 +11,7 @@ abstract class DraggableFeature : HUDFeature() {
 
     var scale: Float
         get() {
-            if (!Asterium.hudManager.hudConfig.has(key)) {
+            if (!Asterium.hudManager.hudConfig.hasPath(listOf(key, "scale"))) {
                 return defaultScale
             }
             return Asterium.hudManager.hudConfig.get(key).getValue("scale").asFloat
@@ -22,7 +22,7 @@ abstract class DraggableFeature : HUDFeature() {
 
     var position: ScreenPosition
         get() {
-            if (!Asterium.hudManager.hudConfig.has(key)) {
+            if (!Asterium.hudManager.hudConfig.hasPath(listOf(key, "position"))) {
                 return defaultPosition
             }
             val jsonData = Asterium.hudManager.hudConfig.get(key).getValue("position").asJsonObject

@@ -29,7 +29,7 @@ abstract class HUDFeature {
 
     var visible: Boolean
         get() {
-            if (!Asterium.hudManager.hudConfig.has(key)) {
+            if (!Asterium.hudManager.hudConfig.hasPath(listOf(key, "visible"))) {
                 return defaultVisibility
             }
             return Asterium.hudManager.hudConfig.get(key).getValue("visible").asBoolean

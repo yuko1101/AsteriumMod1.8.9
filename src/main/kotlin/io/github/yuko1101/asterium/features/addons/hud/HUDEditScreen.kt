@@ -27,11 +27,23 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         }
     }
 
+    private var preMouseX: Double? = null
+    private var preMouseY: Double? = null
     override fun onDrawScreen(matrixStack: UMatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         for (feature in features) {
             val isSelected = selected == feature
 
             val borderColor = if (isSelected) 0xFFDAA520 else 0xFFFFFFFF
+
+            if (dragging == feature) {
+                // this if statement may be needless because dragging is always null before calling onMouseClicked.
+                if (preMouseX != null && preMouseY != null) {
+                    moveFeature(feature, mouseX - preMouseX!!, mouseY - preMouseY!!)
+                }
+
+                preMouseX = mouseX.toDouble()
+                preMouseY = mouseY.toDouble()
+            }
 
             GlStateManager.pushMatrix()
             GlStateManager.translate(feature.position.x, feature.position.y, 0f)
@@ -55,8 +67,6 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         }
     }
 
-    private var preMouseX: Double? = null
-    private var preMouseY: Double? = null
     override fun onMouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int) {
         val feature = getFeatureWithPos(mouseX.toFloat(), mouseY.toFloat())
         selected = feature
@@ -64,27 +74,6 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
 
         preMouseX = mouseX
         preMouseY = mouseY
-    }
-
-    override fun onMouseDragged(x: Double, y: Double, clickedButton: Int, timeSinceLastClick: Long) {
-        if (dragging != null) {
-            val target = dragging!!
-
-            val movedX = target.position.x + (x - preMouseX!!).toFloat()
-            val movedY = target.position.y + (y - preMouseY!!).toFloat()
-
-            val newPosition: ScreenPosition = if (target.position is RelativeScreenPosition) {
-                val res = Asterium.scaledResolution
-                RelativeScreenPosition((movedX.toDouble() / res.scaledWidth), movedY.toDouble() / res.scaledHeight)
-            } else {
-                AbsoluteScreenPosition(movedX, movedY)
-            }
-
-            target.position = newPosition
-            target.position = target.adjustBounds()
-        }
-        preMouseX = x
-        preMouseY = y
     }
 
     override fun onMouseReleased(mouseX: Double, mouseY: Double, state: Int) {
@@ -110,6 +99,22 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         val ex = feature.position.x + feature.scale * feature.width
         val ey = feature.position.y + feature.scale * feature.height
         return (x in sx..ex && y in sy..ey)
+    }
+
+    private fun moveFeature(feature: DraggableFeature, offsetX: Double, offsetY: Double) {
+
+        val movedX = feature.position.x + offsetX.toFloat()
+        val movedY = feature.position.y + offsetY.toFloat()
+
+        val newPosition: ScreenPosition = if (feature.position is RelativeScreenPosition) {
+            val res = Asterium.scaledResolution
+            RelativeScreenPosition((movedX.toDouble() / res.scaledWidth), movedY.toDouble() / res.scaledHeight)
+        } else {
+            AbsoluteScreenPosition(movedX, movedY)
+        }
+
+        feature.position = newPosition
+        feature.position = feature.adjustBounds()
     }
 
 }

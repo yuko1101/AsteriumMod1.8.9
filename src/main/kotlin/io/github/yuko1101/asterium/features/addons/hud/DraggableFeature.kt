@@ -41,9 +41,9 @@ abstract class DraggableFeature : HUDFeature() {
         val screenWidth = res.scaledWidth
         val screenHeight =  res.scaledHeight
         val absoluteX =
-            0F.coerceAtLeast(position.x.coerceAtMost(max(screenWidth - width, 0F)))
+            0F.coerceAtLeast(position.x.coerceAtMost(max(screenWidth - width * scale, 0F)))
         val absoluteY =
-            0F.coerceAtLeast(position.y.coerceAtMost(max(screenHeight - height, 0F)))
+            0F.coerceAtLeast(position.y.coerceAtMost(max(screenHeight - height * scale, 0F)))
         return AbsoluteScreenPosition(absoluteX, absoluteY)
     }
 }

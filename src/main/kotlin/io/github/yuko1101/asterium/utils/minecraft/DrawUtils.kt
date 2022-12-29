@@ -35,7 +35,7 @@ object DrawUtils {
             }
             val l = System.currentTimeMillis() - (xTmp * 10 - y * 10)
             val i = Color.HSBtoRGB(l % 2000.0f.toInt() / 2000.0f, 0.8f, 0.8f)
-            mc.fontRendererObj.drawString(textChar.toString(), xTmp.toFloat(), y.toFloat(), i, shadow)
+            mc.fontRendererObj.drawString(textChar.toString(), xTmp, y, i, shadow)
             xTmp += mc.fontRendererObj.getStringWidth(textChar.toString())
         }
     }

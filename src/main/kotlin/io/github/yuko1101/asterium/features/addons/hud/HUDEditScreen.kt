@@ -1,15 +1,18 @@
 package io.github.yuko1101.asterium.features.addons.hud
 
+import gg.essential.elementa.ElementaVersion
+import gg.essential.elementa.WindowScreen
+import gg.essential.universal.UKeyboard
+import gg.essential.universal.UMatrixStack
 import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.features.addons.hud.position.AbsoluteScreenPosition
 import io.github.yuko1101.asterium.features.addons.hud.position.RelativeScreenPosition
 import io.github.yuko1101.asterium.features.addons.hud.position.ScreenPosition
 import io.github.yuko1101.asterium.utils.minecraft.DrawUtils
-import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.input.Keyboard
 
-class HUDEditScreen : GuiScreen() {
+class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
 
     val features: List<DraggableFeature>
         get() = Asterium.hudManager.features.filterIsInstance<DraggableFeature>()
@@ -18,13 +21,13 @@ class HUDEditScreen : GuiScreen() {
     var selected: DraggableFeature? = null
     var resizing: DraggableFeature? = null
 
-    override fun initGui() {
+    override fun initScreen(width: Int, height: Int) {
         for (feature in features) {
             println("${feature.name}-${feature.addon.getAddonMetaData().uuid}: ${feature.position.x}, ${feature.position.y} scale: ${feature.scale}, visible: ${feature.visible}")
         }
     }
 
-    override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun onDrawScreen(matrixStack: UMatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         for (feature in features) {
             val isSelected = selected == feature
 
@@ -39,7 +42,7 @@ class HUDEditScreen : GuiScreen() {
         }
     }
 
-    override fun keyTyped(typedChar: Char, keyCode: Int) {
+    override fun onKeyPressed(keyCode: Int, typedChar: Char, modifiers: UKeyboard.Modifiers?) {
         when (keyCode) {
             Keyboard.KEY_ESCAPE -> {
                 if (selected != null) {
@@ -52,9 +55,9 @@ class HUDEditScreen : GuiScreen() {
         }
     }
 
-    private var preMouseX: Int? = null
-    private var preMouseY: Int? = null
-    override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
+    private var preMouseX: Double? = null
+    private var preMouseY: Double? = null
+    override fun onMouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int) {
         val feature = getFeatureWithPos(mouseX.toFloat(), mouseY.toFloat())
         selected = feature
         dragging = feature
@@ -63,12 +66,12 @@ class HUDEditScreen : GuiScreen() {
         preMouseY = mouseY
     }
 
-    override fun mouseClickMove(mouseX: Int, mouseY: Int, clickedMouseButton: Int, timeSinceLastClick: Long) {
+    override fun onMouseDragged(x: Double, y: Double, clickedButton: Int, timeSinceLastClick: Long) {
         if (dragging != null) {
             val target = dragging!!
 
-            val movedX = target.position.x + (mouseX - preMouseX!!).toFloat()
-            val movedY = target.position.y + (mouseY - preMouseY!!).toFloat()
+            val movedX = target.position.x + (x - preMouseX!!).toFloat()
+            val movedY = target.position.y + (y - preMouseY!!).toFloat()
 
             val newPosition: ScreenPosition = if (target.position is RelativeScreenPosition) {
                 val res = Asterium.scaledResolution
@@ -80,15 +83,15 @@ class HUDEditScreen : GuiScreen() {
             target.position = newPosition
             target.position = target.adjustBounds()
         }
-        preMouseX = mouseX
-        preMouseY = mouseY
+        preMouseX = x
+        preMouseY = y
     }
 
-    override fun mouseReleased(mouseX: Int, mouseY: Int, state: Int) {
+    override fun onMouseReleased(mouseX: Double, mouseY: Double, state: Int) {
         dragging = null
     }
 
-    override fun onGuiClosed() {
+    override fun onScreenClose() {
         Asterium.hudManager.hudConfig.save()
     }
 

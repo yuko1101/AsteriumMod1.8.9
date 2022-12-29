@@ -1,9 +1,9 @@
 package io.github.yuko1101.asterium.utils.minecraft
 
 import io.github.yuko1101.asterium.Asterium
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -88,5 +88,28 @@ object DrawUtils {
         drawLine(sx, sy, ex, ey, width, color)
         GL11.glDisable(GL11.GL_LINE_STIPPLE)
         GlStateManager.popMatrix()
+    }
+
+    /**
+     * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
+     * Modified
+     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+     * @author Moulberry (Modified)
+     */
+    fun drawRect(left: Float, top: Float, right: Float, bottom: Float, color: Long) {
+        val f3 = (color shr 24 and 255).toFloat() / 255.0f
+        val f = (color shr 16 and 255).toFloat() / 255.0f
+        val f1 = (color shr 8 and 255).toFloat() / 255.0f
+        val f2 = (color and 255).toFloat() / 255.0f
+        val tessellator = Tessellator.getInstance()
+        GlStateManager.disableTexture2D()
+        GlStateManager.color(f, f1, f2, f3)
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION)
+        worldRenderer.pos(left.toDouble(), bottom.toDouble(), 0.0).endVertex()
+        worldRenderer.pos(right.toDouble(), bottom.toDouble(), 0.0).endVertex()
+        worldRenderer.pos(right.toDouble(), top.toDouble(), 0.0).endVertex()
+        worldRenderer.pos(left.toDouble(), top.toDouble(), 0.0).endVertex()
+        tessellator.draw()
+        GlStateManager.enableTexture2D()
     }
 }

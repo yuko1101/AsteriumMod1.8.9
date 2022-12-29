@@ -30,6 +30,7 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
     private var preMouseX: Double? = null
     private var preMouseY: Double? = null
     override fun onDrawScreen(matrixStack: UMatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        drawDefaultBackground()
         for (feature in features) {
             val isSelected = selected == feature
 
@@ -44,7 +45,6 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
                 preMouseX = mouseX.toDouble()
                 preMouseY = mouseY.toDouble()
             }
-
             GlStateManager.pushMatrix()
             GlStateManager.translate(feature.position.x, feature.position.y, 0f)
             GlStateManager.scale(feature.scale.toDouble(), feature.scale.toDouble(), 1.0)

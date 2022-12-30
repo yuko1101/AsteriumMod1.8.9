@@ -12,8 +12,14 @@ import net.minecraft.entity.projectile.EntityArrow
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import org.lwjgl.opengl.GL11
-import java.util.ArrayList
 
+/**
+ * Repo: https://github.com/asbyth/ArrowTrail (Not available)
+ * No licence provided
+ *
+ * More Info: https://github.com/HyperiumClient/Hyperium-Repo/blob/master/installer/addons.json#L3-L13
+ * @author asbyth, aycy (Modified by yuko1101)
+ */
 class ArrowPath : FeaturedAddon(), ExtraEventListener {
     override fun init() {
     }
@@ -30,28 +36,30 @@ class ArrowPath : FeaturedAddon(), ExtraEventListener {
         val config = ArrowPathConfig()
     }
 
-    private val arrowMap: MutableMap<EntityArrow, ArrayList<Vec3>> = mutableMapOf()
+    private val arrows = arrayListOf<Pair<EntityArrow, ArrayList<Pair<Vec3, Long>>>>()
     private val removeList = arrayListOf<EntityArrow>()
 
 
     override fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {
         if (removeList.size > 0) {
             for (rl in removeList) {
-                if (arrowMap.containsKey(rl)) arrowMap.remove(rl)
+                if (arrows.map { it.first }.contains(rl)) arrows.removeIf { it.first == rl }
             }
             removeList.clear()
         }
         if (config.isEnabled) {
-            Minecraft.getMinecraft().theWorld.loadedEntityList.stream().filter { entity: Entity -> entity is EntityArrow && !arrowMap.containsKey(entity) && !entity.isInvisible() && isMoving(entity) }.forEach { entity: Entity -> arrowMap[entity as EntityArrow] = arrayListOf(Vec3(entity.posX, entity.posY, entity.posZ)) }
+            Minecraft.getMinecraft().theWorld.loadedEntityList.filter { entity: Entity -> entity is EntityArrow && !arrows.map { it.first }.contains(entity) && !entity.isInvisible() && isMoving(entity) }.forEach { entity: Entity -> arrows.add(Pair(entity as EntityArrow, arrayListOf(Pair(Vec3(entity.posX, entity.posY, entity.posZ), System.currentTimeMillis())))) }
 //                println(arrowMap.map { (_, arrowPath) -> arrowPath.size })
             while (true) {
-                for ((arrow, arrowPath) in arrowMap) {
-                    if (!arrow.isInvisible && isMoving(arrow)) {
+                for ((arrow, arrowPath) in arrows) {
+                    val arrowExists = Minecraft.getMinecraft().theWorld.loadedEntityList.find { entity -> entity.uniqueID == arrow.uniqueID } != null
+                    if (arrowExists && !arrow.isInvisible && isMoving(arrow)) {
                         if (arrowPath.size > config.length) {
                             arrowPath.removeAt(0)
                         }
                     } else {
-                        if (arrowPath.size > 1) {
+                        // 矢が消えた、透明になった、止まった場合、それぞれのarrow pathについて作成から一定時間が過ぎたらそれぞれ削除する
+                        if (arrowPath.size > 1 && System.currentTimeMillis() - arrowPath.first().second > 500) {
                             arrowPath.removeAt(0)
                         }
                         if (arrowPath.size <= 1) {
@@ -60,12 +68,9 @@ class ArrowPath : FeaturedAddon(), ExtraEventListener {
                         }
                     }
                     val currentPos = Vec3(arrow.posX, arrow.posY, arrow.posZ)
-                    if (Minecraft.getMinecraft().theWorld.loadedEntityList.find { entity -> entity.uniqueID == arrow.uniqueID } == null) {
-                        removeList.add(arrow)
-                        continue
-                    }
-                    if (arrowPath[arrowPath.size - 1].distanceTo(currentPos) >= 0.05000000074505806) {
-                        arrowMap[arrow]!!.add(currentPos)
+
+                    if (arrowPath[arrowPath.size - 1].first.distanceTo(currentPos) >= 0.05000000074505806 && arrowExists) {
+                        arrowPath.add(Pair(currentPos, System.currentTimeMillis()))
                     }
                     GL11.glPushMatrix()
                     GL11.glEnable(3042)
@@ -79,7 +84,7 @@ class ArrowPath : FeaturedAddon(), ExtraEventListener {
                     val tessellator = Tessellator.getInstance()
                     val worldRenderer = tessellator.worldRenderer
                     worldRenderer.begin(3, DefaultVertexFormats.POSITION_COLOR)
-                    arrowPath.forEach { position ->
+                    arrowPath.map { it.first }.forEach { position ->
                         val xPos = position.xCoord - Minecraft.getMinecraft().renderManager.viewerPosX
                         val yPos = position.yCoord - Minecraft.getMinecraft().renderManager.viewerPosY
                         val zPos = position.zCoord - Minecraft.getMinecraft().renderManager.viewerPosZ

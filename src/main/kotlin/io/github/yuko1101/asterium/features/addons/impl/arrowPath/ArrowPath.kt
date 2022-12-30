@@ -2,6 +2,7 @@ package io.github.yuko1101.asterium.features.addons.impl.arrowPath
 
 import gg.essential.vigilance.Vigilant
 import io.github.yuko1101.asterium.features.addons.AddonMetaData
+import io.github.yuko1101.asterium.features.addons.ExtraEventListener
 import io.github.yuko1101.asterium.features.addons.FeaturedAddon
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
@@ -10,18 +11,15 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.projectile.EntityArrow
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.opengl.GL11
 import java.util.ArrayList
 
-class ArrowPath : FeaturedAddon() {
+class ArrowPath : FeaturedAddon(), ExtraEventListener {
     override fun init() {
-        MinecraftForge.EVENT_BUS.register(this)
     }
 
     override fun addonMetaData(): AddonMetaData {
-        return AddonMetaData("ArrowPath", "0.1.0", "矢の軌跡を表示します")
+        return AddonMetaData("ArrowPath", "0.1.0", "矢の軌跡を表示します", eventListeners = listOf(this))
     }
 
     override fun config(): Vigilant {
@@ -36,10 +34,7 @@ class ArrowPath : FeaturedAddon() {
     private val removeList = arrayListOf<EntityArrow>()
 
 
-
-
-    @SubscribeEvent
-    fun renderWorld(e: RenderWorldLastEvent) {
+    override fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {
         if (removeList.size > 0) {
             for (rl in removeList) {
                 if (arrowMap.containsKey(rl)) arrowMap.remove(rl)

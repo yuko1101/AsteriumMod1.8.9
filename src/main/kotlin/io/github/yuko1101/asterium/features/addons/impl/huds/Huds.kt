@@ -11,6 +11,7 @@ class Huds : FeaturedAddon() {
     override fun init() {
         instance = this
         Asterium.hudManager.register(TestHud())
+        Asterium.hudManager.register(TestHud2())
     }
 
     companion object {

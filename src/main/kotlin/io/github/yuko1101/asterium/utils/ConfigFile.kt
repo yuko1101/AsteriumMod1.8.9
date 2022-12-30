@@ -26,43 +26,43 @@ open class ConfigFile(val file: File, val default: JsonObject, private val route
     }
 
     fun set(key: String, value: JsonElement): ConfigFile {
-        getObjectFromRoute().add(key, value)
+        getObjectFromRoute(true).add(key, value)
         return this
     }
     fun set(key: String, value: String): ConfigFile {
-        getObjectFromRoute().addProperty(key, value)
+        getObjectFromRoute(true).addProperty(key, value)
         return this
     }
     fun set(key: String, value: Number): ConfigFile {
-        getObjectFromRoute().addProperty(key, value)
+        getObjectFromRoute(true).addProperty(key, value)
         return this
     }
     fun set(key: String, value: Boolean): ConfigFile {
-        getObjectFromRoute().addProperty(key, value)
+        getObjectFromRoute(true).addProperty(key, value)
         return this
     }
     fun set(value: JsonElement): ConfigFile {
-        getPreObjectFromRoute().add(route.last(), value)
+        getPreObjectFromRoute(true).add(route.last(), value)
         return this
     }
     fun set(value: String): ConfigFile {
-        getPreObjectFromRoute().addProperty(route.last(), value)
+        getPreObjectFromRoute(true).addProperty(route.last(), value)
         return this
     }
     fun set(value: Number): ConfigFile {
-        getPreObjectFromRoute().addProperty(route.last(), value)
+        getPreObjectFromRoute(true).addProperty(route.last(), value)
         return this
     }
     fun set(value: Boolean): ConfigFile {
-        getPreObjectFromRoute().addProperty(route.last(), value)
+        getPreObjectFromRoute(true).addProperty(route.last(), value)
         return this
     }
 
     fun getValue(key: String): JsonElement {
-        return getObjectFromRoute().get(key)
+        return getObjectFromRoute(false).get(key)
     }
     fun getValue(): JsonElement {
-        return getPreObjectFromRoute().get(route.last())
+        return getPreObjectFromRoute(false).get(route.last())
     }
 
     open fun get(key: String): PathResolver {
@@ -79,11 +79,13 @@ open class ConfigFile(val file: File, val default: JsonObject, private val route
     }
 
     fun has(key: String): Boolean {
-        return getObjectFromRoute().has(key)
+        if (!hasPathInData(route)) return false
+        return getObjectFromRoute(false).has(key)
     }
 
     fun hasPath(path: List<String>): Boolean {
-        var obj: JsonElement = getObjectFromRoute()
+        if (!hasPathInData(route)) return false
+        var obj: JsonElement = getObjectFromRoute(false)
         for (i in path.indices) {
             if (!obj.isJsonObject) return false
             if (!obj.asJsonObject.has(path[i])) return false
@@ -106,21 +108,27 @@ open class ConfigFile(val file: File, val default: JsonObject, private val route
         return this
     }
 
-    private fun getObjectFromRoute(): JsonObject {
+    private fun getObjectFromRoute(createRecursive: Boolean): JsonObject {
 //        println(route)
 //        println(data)
         var obj = data
         for (i in 0 until route.size) {
+            if (!obj.has(route[i]) && createRecursive) {
+                obj.add(route[i], JsonObject())
+            }
             obj = obj.get(route[i]).asJsonObject
         }
         return obj
     }
 
-    private fun getPreObjectFromRoute(): JsonObject {
+    private fun getPreObjectFromRoute(createRecursive: Boolean): JsonObject {
         //println(route)
         //println(data)
         var obj = data
         for (i in 0 until route.size - 1) {
+            if (!obj.has(route[i]) && createRecursive) {
+                obj.add(route[i], JsonObject())
+            }
             obj = obj.get(route[i]).asJsonObject
         }
         return obj

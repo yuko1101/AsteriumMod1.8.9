@@ -7,18 +7,22 @@ import gg.essential.universal.UMatrixStack
 import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.features.addons.hud.position.AbsoluteScreenPosition
 import io.github.yuko1101.asterium.features.addons.hud.position.RelativeScreenPosition
+import io.github.yuko1101.asterium.features.addons.hud.position.ScreenArea
 import io.github.yuko1101.asterium.features.addons.hud.position.ScreenPosition
+import io.github.yuko1101.asterium.utils.minecraft.ChatLib
 import io.github.yuko1101.asterium.utils.minecraft.DrawUtils
 import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.input.Keyboard
+import org.lwjgl.opengl.GL11
 
 class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
 
     val features: List<DraggableFeature>
         get() = Asterium.hudManager.features.filterIsInstance<DraggableFeature>()
 
-    var dragging: DraggableFeature? = null
-    var selected: DraggableFeature? = null
+    var selectingStart: AbsoluteScreenPosition? = null
+    val selected = arrayListOf<DraggableFeature>()
+    var dragging = false
     var resizing: DraggableFeature? = null
 
     override fun initScreen(width: Int, height: Int) {
@@ -27,23 +31,39 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         }
     }
 
-    private var preMouseX: Double? = null
-    private var preMouseY: Double? = null
+    private var preMousePos: AbsoluteScreenPosition? = null
     override fun onDrawScreen(matrixStack: UMatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        drawDefaultBackground()
+        val res = Asterium.scaledResolution
+        GlStateManager.enableAlpha()
+        GlStateManager.enableBlend()
+        // draw background
+        DrawUtils.drawRect(0F, 0F, res.scaledWidth.toFloat(), res.scaledHeight.toFloat(), 0x80000000)
+//        GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_ZERO)
+        val selectingArea = selectingStart?.let { ScreenArea(it, AbsoluteScreenPosition(mouseX.toFloat(), mouseY.toFloat())) }
+        if (selectingArea != null) {
+            DrawUtils.drawRect(selectingArea.start.x, selectingArea.start.y, selectingArea.end.x, selectingArea.end.y, 0x80DAA520)
+            DrawUtils.drawHollowRect(selectingArea.start.x, selectingArea.start.y, selectingArea.end.x, selectingArea.end.y, 1.5F, 0xFFDAA520)
+        }
+
         for (feature in features) {
-            val isSelected = selected == feature
+            // detect selecting
+            if (selectingArea != null) {
+                if (isFeatureInArea(feature, selectingArea)) {
+                    if (!selected.contains(feature)) selected.add(feature)
+                } else {
+                    selected.remove(feature)
+                }
+            }
+
+            val isSelected = selected.contains(feature)
 
             val borderColor = if (isSelected) 0xFFDAA520 else 0xFFFFFFFF
 
-            if (dragging == feature) {
+            if (isSelected && dragging) {
                 // this if statement may be needless because dragging is always null before calling onMouseClicked.
-                if (preMouseX != null && preMouseY != null) {
-                    moveFeature(feature, mouseX - preMouseX!!, mouseY - preMouseY!!)
+                if (preMousePos != null) {
+                    moveFeature(feature, mouseX.toFloat() - preMousePos!!.x, mouseY.toFloat() - preMousePos!!.y)
                 }
-
-                preMouseX = mouseX.toDouble()
-                preMouseY = mouseY.toDouble()
             }
             GlStateManager.pushMatrix()
             GlStateManager.translate(feature.position.x, feature.position.y, 0f)
@@ -52,13 +72,14 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
             DrawUtils.drawHollowRect(0F, 0F, feature.width, feature.height, 0.5F, borderColor)
             GlStateManager.popMatrix()
         }
+        if (dragging) preMousePos = AbsoluteScreenPosition(mouseX.toFloat(), mouseY.toFloat())
     }
 
     override fun onKeyPressed(keyCode: Int, typedChar: Char, modifiers: UKeyboard.Modifiers?) {
         when (keyCode) {
             Keyboard.KEY_ESCAPE -> {
-                if (selected != null) {
-                    selected = null
+                if (selected.isNotEmpty()) {
+                    selected.clear()
                     return
                 }
                 mc.displayGuiScreen(null)
@@ -69,15 +90,23 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
 
     override fun onMouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int) {
         val feature = getFeatureWithPos(mouseX.toFloat(), mouseY.toFloat())
-        selected = feature
-        dragging = feature
+        if (feature != null) {
+            dragging = true
+            if (!selected.contains(feature)) {
+                selected.clear()
+                selected.add(feature)
+            }
+        } else {
+            selected.clear()
+            selectingStart = AbsoluteScreenPosition(mouseX.toFloat(), mouseY.toFloat())
+        }
 
-        preMouseX = mouseX
-        preMouseY = mouseY
+        preMousePos = AbsoluteScreenPosition(mouseX.toFloat(), mouseY.toFloat())
     }
 
     override fun onMouseReleased(mouseX: Double, mouseY: Double, state: Int) {
-        dragging = null
+        dragging = false
+        selectingStart = null
     }
 
     override fun onScreenClose() {
@@ -94,17 +123,21 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
     }
 
     private fun isFeatureAtPos(feature: DraggableFeature, x: Float, y: Float): Boolean {
-        val sx = feature.position.x
-        val sy = feature.position.y
         val ex = feature.position.x + feature.scale * feature.width
         val ey = feature.position.y + feature.scale * feature.height
-        return (x in sx..ex && y in sy..ey)
+        return ScreenArea(feature.position, AbsoluteScreenPosition(ex, ey)).containsPos(AbsoluteScreenPosition(x, y))
     }
 
-    private fun moveFeature(feature: DraggableFeature, offsetX: Double, offsetY: Double) {
+    private fun isFeatureInArea(feature: DraggableFeature, area: ScreenArea): Boolean {
+        val ex = feature.position.x + feature.scale * feature.width
+        val ey = feature.position.y + feature.scale * feature.height
+        return ScreenArea(feature.position, AbsoluteScreenPosition(ex, ey)).overlapsArea(area)
+    }
 
-        val movedX = feature.position.x + offsetX.toFloat()
-        val movedY = feature.position.y + offsetY.toFloat()
+    private fun moveFeature(feature: DraggableFeature, offsetX: Float, offsetY: Float) {
+
+        val movedX = feature.position.x + offsetX
+        val movedY = feature.position.y + offsetY
 
         val newPosition: ScreenPosition = if (feature.position is RelativeScreenPosition) {
             val res = Asterium.scaledResolution

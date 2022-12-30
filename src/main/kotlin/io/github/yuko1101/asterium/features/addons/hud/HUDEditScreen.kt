@@ -95,8 +95,16 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         if (feature != null) {
             dragging = true
             if (!selected.contains(feature)) {
-                selected.clear()
+                if (!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) && !Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) selected.clear()
                 selected.add(feature)
+            } else {
+                if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
+                    selected.remove(feature)
+                } else {
+                    // もともと選択されていたHUDのうちの1つをクリックしたとき、Ctrlが押されていなかったら
+                    lastClickedPos = AbsoluteScreenPosition(mouseX.toInt().toFloat(), mouseY.toInt().toFloat())
+                    lastClickedTime = System.currentTimeMillis()
+                }
             }
         } else {
             selected.clear()
@@ -104,8 +112,6 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         }
 
         preMousePos = AbsoluteScreenPosition(mouseX.toFloat(), mouseY.toFloat())
-        lastClickedPos = AbsoluteScreenPosition(mouseX.toInt().toFloat(), mouseY.toInt().toFloat())
-        lastClickedTime = System.currentTimeMillis()
     }
 
     override fun onMouseReleased(mouseX: Double, mouseY: Double, state: Int) {
@@ -114,7 +120,7 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
 
         // 最後にクリックした地点とほとんど変わっていなく、時間があまり経っていない場合は、シングルクリックをしたとみなし、選択中のHUDをクリックしたHUDに変更する
         if (lastClickedPos != null) {
-            if (lastClickedPos!!.x == mouseX.toInt().toFloat() && lastClickedPos!!.y == mouseY.toInt().toFloat() && System.currentTimeMillis() - lastClickedTime < 1000) {
+            if (lastClickedPos!!.x == mouseX.toInt().toFloat() && lastClickedPos!!.y == mouseY.toInt().toFloat() && System.currentTimeMillis() - lastClickedTime < 500) {
                 lastClickedTime = 0
                 val feature = getFeatureWithPos(mouseX.toFloat(), mouseY.toFloat())
                 if (feature != null) {

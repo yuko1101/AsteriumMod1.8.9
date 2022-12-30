@@ -5,8 +5,9 @@
   "package": "io.github.yuko1101.asterium.mixin.transformers",
   "refmap": "mixins.asterium.refmap.json",
   "mixins": [
-    "network.MixinNetworkManager",
-    "network.MixinNetHandlerPlayClient"
+    "network.MixinC01PacketChatMessage",
+    "network.MixinNetHandlerPlayClient",
+    "network.MixinNetworkManager"
   ],
   "verbose": true
 }

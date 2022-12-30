@@ -88,6 +88,8 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         }
     }
 
+    private var lastClickedPos: AbsoluteScreenPosition? = null
+    private var lastClickedTime: Long = 0
     override fun onMouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int) {
         val feature = getFeatureWithPos(mouseX.toFloat(), mouseY.toFloat())
         if (feature != null) {
@@ -102,11 +104,25 @@ class HUDEditScreen : WindowScreen(ElementaVersion.V2) {
         }
 
         preMousePos = AbsoluteScreenPosition(mouseX.toFloat(), mouseY.toFloat())
+        lastClickedPos = AbsoluteScreenPosition(mouseX.toInt().toFloat(), mouseY.toInt().toFloat())
+        lastClickedTime = System.currentTimeMillis()
     }
 
     override fun onMouseReleased(mouseX: Double, mouseY: Double, state: Int) {
         dragging = false
         selectingStart = null
+
+        // 最後にクリックした地点とほとんど変わっていなく、時間があまり経っていない場合は、シングルクリックをしたとみなし、選択中のHUDをクリックしたHUDに変更する
+        if (lastClickedPos != null) {
+            if (lastClickedPos!!.x == mouseX.toInt().toFloat() && lastClickedPos!!.y == mouseY.toInt().toFloat() && System.currentTimeMillis() - lastClickedTime < 1000) {
+                lastClickedTime = 0
+                val feature = getFeatureWithPos(mouseX.toFloat(), mouseY.toFloat())
+                if (feature != null) {
+                    selected.clear()
+                    selected.add(feature)
+                }
+            }
+        }
     }
 
     override fun onScreenClose() {

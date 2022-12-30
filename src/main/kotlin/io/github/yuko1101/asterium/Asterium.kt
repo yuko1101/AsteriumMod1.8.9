@@ -7,7 +7,7 @@ import io.github.yuko1101.asterium.features.ChatChannel
 import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.impl.arrowPath.ArrowPath
 import io.github.yuko1101.asterium.features.addons.hud.HUDManager
-import io.github.yuko1101.asterium.features.addons.impl.huds.Huds
+import io.github.yuko1101.asterium.features.addons.impl.debugaddon.DebugAddon
 import io.github.yuko1101.asterium.listener.Listener
 import io.github.yuko1101.asterium.utils.FileManager
 import io.github.yuko1101.asterium.utils.minecraft.InventoryUtils
@@ -33,7 +33,7 @@ class Asterium {
     fun init(event: FMLInitializationEvent) {
         FileManager.init()
 
-        AddonManager.addons.add(AddonCore(listOf(ArrowPath().getAddonMetaData(), Huds().getAddonMetaData()), null))
+        AddonManager.addons.add(AddonCore(listOf(ArrowPath().getAddonMetaData(), DebugAddon().getAddonMetaData()), null))
         AddonManager.refreshAddons()
 
         MinecraftForge.EVENT_BUS.register(this)

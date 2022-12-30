@@ -1,6 +1,6 @@
-package io.github.yuko1101.asterium.mixins.transformers.network;
+package io.github.yuko1101.asterium.mixin.transformers.network;
 
-import io.github.yuko1101.asterium.mixins.hooks.network.NetworkManagerHookKt;
+import io.github.yuko1101.asterium.mixin.hooks.network.NetworkManagerHookKt;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.network.NetworkManager;

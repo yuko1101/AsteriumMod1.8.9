@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.mixins
+package io.github.yuko1101.asterium.mixin
 
 import net.minecraft.launchwrapper.Launch
 import org.objectweb.asm.tree.ClassNode
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo
 
 class AsteriumMixinPlugin : IMixinConfigPlugin {
 
-    val mixinPackage = "io.github.yuko1101.asterium.mixins.transformers"
+    val mixinPackage = "io.github.yuko1101.asterium.mixin.transformers"
     var deobfEnvironment = false
 
     override fun onLoad(mixinPackage: String) {

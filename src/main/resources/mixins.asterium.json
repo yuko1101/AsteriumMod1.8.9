@@ -1,8 +1,8 @@
 {
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8",
-  "plugin": "io.github.yuko1101.asterium.mixins.AsteriumMixinPlugin",
-  "package": "io.github.yuko1101.asterium.mixins.transformers",
+  "plugin": "io.github.yuko1101.asterium.mixin.AsteriumMixinPlugin",
+  "package": "io.github.yuko1101.asterium.mixin.transformers",
   "refmap": "mixins.asterium.refmap.json",
   "mixins": [
     "network.MixinNetworkManager",

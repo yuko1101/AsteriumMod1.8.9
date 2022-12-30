@@ -1,6 +1,6 @@
-package io.github.yuko1101.asterium.mixins.transformers.network;
+package io.github.yuko1101.asterium.mixin.transformers.network;
 
-import io.github.yuko1101.asterium.mixins.hooks.network.NetHandlerPlayClientHookKt;
+import io.github.yuko1101.asterium.mixin.hooks.network.NetHandlerPlayClientHookKt;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;

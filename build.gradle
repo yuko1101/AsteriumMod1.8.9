@@ -10,7 +10,7 @@ buildscript {
         flatDir dirs: "libs"
     }
     dependencies {
-        classpath "com.github.ReplayMod:ForgeGradle:ceb83c0:all"
+        classpath "com.github.ReplayMod:ForgeGradle:48c4f0c6c7:all"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
     }

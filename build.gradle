@@ -10,7 +10,7 @@ buildscript {
         flatDir dirs: 'libs'
     }
     dependencies {
-        classpath 'com.github.ReplayMod:ForgeGradle:ceb83c0:all'
+        classpath "com.github.ReplayMod:ForgeGradle:48c4f0c6c7:all"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
@@ -26,43 +26,54 @@ archivesBaseName = "Asterium"
 
 sourceCompatibility = targetCompatibility = 1.8
 
-configurations.runtimeOnly.canBeResolved = true
+//configurations.runtimeOnly.canBeResolved = true
 
 minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
     mappings = "stable_22"
     makeObfSourceJar = false
-    clientJvmArgs += ["-Dfml.coreMods.load=io.github.yuko1101.asterium.tweaker.AsteriumLoadingPlugin", "-Dasmhelper.verbose=true", "-Dmixin.debug.verbose=true", "-Dmixin.debug.export=true", "-Dmixin.dumpTargetOnFailure=true"]
+    clientJvmArgs += [
+//            "-Delementa.dev=true",
+//            "-Delementa.debug=true",
+            "-Delementa.invalid_usage=warn",
+            "-Dmixin.debug.verbose=true",
+            "-Dmixin.debug.export=true",
+            "-Dlegacy.debugClassLoading=true",
+            "-Dlegacy.debugClassLoadingSave=true",
+            "-Dlegacy.debugClassLoadingFiner=true"
+    ]
     clientRunArgs += ["--tweakClass=gg.essential.loader.stage0.EssentialSetupTweaker", "--mixins=mixins.asterium.json" ]
 }
-
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }
 
-processResources
-        {
+processResources {
 
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
 
-                expand 'version':project.version, 'mcversion':project.minecraft.version
-            }
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
 
-            exclude "META-INF/**"
-            copy {
-                from("src/main/resources")
-                into("build/classes/main")
-            }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 
-            rename '(.+_at.cfg)', 'META-INF/$1'
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
+//    exclude "META-INF/**"
+//    copy {
+//        from("src/main/resources")
+//        into("build/classes/main")
+//    }
+//
+//    rename '(.+_at.cfg)', 'META-INF/$1'
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 configurations {
     shade
@@ -87,20 +98,15 @@ dependencies {
     provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     shade "gg.essential:loader-launchwrapper:1.1.3"
-    provided("gg.essential:essential-1.8.9-forge:2163") {
+    provided("gg.essential:essential-1.8.9-forge:11092+gecb85a783") {
         exclude module: "asm"
         exclude module: "asm-commons"
         exclude module: "asm-tree"
         exclude module: "gson"
-    }
-
-    provided("com.github.Skytils:AsmHelper:91ecc2bd9c")
-    shade ("com.github.Skytils:AsmHelper:91ecc2bd9c") {
         exclude module: "kotlin-reflect"
         exclude module: "kotlin-stdlib-jdk8"
         exclude module: "kotlin-stdlib-jdk7"
         exclude module: "kotlin-stdlib"
-        exclude module: "kotlinx-coroutines-core"
     }
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
@@ -119,11 +125,9 @@ jar {
             "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
             "TweakOrder": "0",
             "MixinConfigs": "mixins.asterium.json",
-            "FMLCorePlugin": "io.github.yuko1101.asterium.tweaker.AsteriumLoadingPlugin",
-            "FMLCorePluginContainsFMLMod": true,
             "ForceLoadAsMod": true,
             "ModType": "FML",
     )
 }
 
-tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
+tasks.withType(Jar).configureEach { compileJava.options.encoding = 'UTF-8' }

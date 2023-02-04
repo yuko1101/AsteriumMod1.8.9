@@ -1,6 +1,5 @@
 package io.github.yuko1101.asterium.features.addons
 
-import io.github.yuko1101.asterium.events.impl.MainReceivePacketEvent
 import io.github.yuko1101.asterium.events.impl.PacketEvent
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.*
@@ -226,10 +225,6 @@ object EventEmitter {
     @SubscribeEvent
     fun onPacketEventReceiveEvent(event: PacketEvent.ReceiveEvent) {
         getListeners().forEach { listener -> listener.onPacketEventReceiveEvent(event) }
-    }
-    @SubscribeEvent
-    fun onMainReceivePacketEvent(event: MainReceivePacketEvent<*, *>) {
-        getListeners().forEach { listener -> listener.onMainReceivePacketEvent(event) }
     }
 
     @SubscribeEvent

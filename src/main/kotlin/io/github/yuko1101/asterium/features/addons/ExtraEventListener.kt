@@ -1,6 +1,5 @@
 package io.github.yuko1101.asterium.features.addons
 
-import io.github.yuko1101.asterium.events.impl.MainReceivePacketEvent
 import io.github.yuko1101.asterium.events.impl.PacketEvent
 import net.minecraftforge.client.event.*
 import net.minecraftforge.event.entity.player.AttackEntityEvent
@@ -91,7 +90,6 @@ interface ExtraEventListener {
     fun onPacketEvent(event: PacketEvent) {}
     fun onPacketEventSendEvent(event: PacketEvent.SendEvent) {}
     fun onPacketEventReceiveEvent(event: PacketEvent.ReceiveEvent) {}
-    fun onMainReceivePacketEvent(event: MainReceivePacketEvent<*, *>) {}
 
 //    // Sound
 //

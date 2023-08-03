@@ -5,8 +5,8 @@ import gg.essential.api.commands.DefaultHandler
 import gg.essential.api.commands.SubCommand
 import gg.essential.api.utils.GuiUtil
 import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.features.addons.AddonManager
-import io.github.yuko1101.asterium.features.addons.hud.HUDEditScreen
+import io.github.yuko1101.asterium.features.hud.DraggableFeature
+import io.github.yuko1101.asterium.features.hud.HUDEditScreen
 import io.github.yuko1101.asterium.utils.minecraft.ChatLib
 import java.util.*
 
@@ -31,12 +31,12 @@ class AsteriumCommand : Command("asterium") {
 
     @SubCommand(value = "unload", description = "Unload all your Asterium Addons.")
     fun unload() {
-        AddonManager.unload()
+        Asterium.addonManager.unloadAll()
         ChatLib.chat("アンロードしました！")
     }
 
     @SubCommand(value = "hud", description = "Open HUD edit screen.")
     fun openHUDEditScreen() {
-        GuiUtil.open(HUDEditScreen())
+        GuiUtil.open(HUDEditScreen(Asterium.hudManager.registered.filterIsInstance<DraggableFeature>().toList()))
     }
 }

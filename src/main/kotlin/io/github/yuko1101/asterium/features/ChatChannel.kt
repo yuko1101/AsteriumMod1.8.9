@@ -1,9 +1,8 @@
 package io.github.yuko1101.asterium.features
 
+import com.google.gson.JsonObject
 import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.utils.FileManager
-import io.github.yuko1101.asterium.utils.FileUtils.Companion.getFromJson
-import io.github.yuko1101.asterium.utils.FileUtils.Companion.setToJson
+import io.github.yuko1101.asterium.utils.ConfigFile
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.GuiChat
@@ -23,9 +22,8 @@ class ChatChannel {
 
         fun onRender() {
 
-            lastPrivatePlayer =
-                File(FileManager.clientDirectory, "data.json").getFromJson("lastPrivatePlayer", lastPrivatePlayer)
-            chatChannel = File(FileManager.clientDirectory, "data.json").getFromJson("lastChatChannel", chatChannel)
+            lastPrivatePlayer = if (Asterium.configFile.has("lastPrivatePlayer")) Asterium.configFile.getValue("lastPrivatePlayer").asString else ""
+            chatChannel = if (Asterium.configFile.has("lastChatChannel")) Asterium.configFile.getValue("lastChatChannel").asString else ""
             y = Asterium.scaledResolution.scaledHeight - font.FONT_HEIGHT * 2 - 5
             val screen = Minecraft.getMinecraft().currentScreen
             if (screen !is GuiChat) return
@@ -55,8 +53,8 @@ class ChatChannel {
                 lastPrivatePlayer = event.message.formattedText.replace("§aOpened a chat conversation with (.*)§a for the next 5 minutes. Use §r§b/chat a§r§a to leave§r".toRegex(), "$1")
                 chatChannel = "private"
             }
-            if (preChatChannel != chatChannel) File(FileManager.clientDirectory, "data.json").setToJson("lastChatChannel", chatChannel)
-            if (preLastPrivatePlayer != lastPrivatePlayer) File(FileManager.clientDirectory, "data.json").setToJson("lastPrivatePlayer", lastPrivatePlayer)
+            if (preChatChannel != chatChannel) Asterium.configFile.set("lastChatChannel", chatChannel).save()
+            if (preLastPrivatePlayer != lastPrivatePlayer) Asterium.configFile.set("lastPrivatePlayer", lastPrivatePlayer).save()
         }
     }
 }

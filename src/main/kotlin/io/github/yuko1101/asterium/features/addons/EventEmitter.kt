@@ -1,5 +1,6 @@
 package io.github.yuko1101.asterium.features.addons
 
+import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.events.impl.PacketEvent
 import net.minecraft.client.Minecraft
 import net.minecraftforge.client.event.*
@@ -236,7 +237,7 @@ object EventEmitter {
 
     private fun getListeners(): List<ExtraEventListener> {
         val listeners = arrayListOf<ExtraEventListener>()
-        AddonManager.getAddonMetaDataList().forEach { addonMetaData -> listeners.addAll(addonMetaData.eventListeners) }
+        // TODO: add listeners
         return listeners
     }
 

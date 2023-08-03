@@ -1,8 +1,8 @@
-package io.github.yuko1101.asterium.features.addons.hud
+package io.github.yuko1101.asterium.features.hud
 
 import io.github.yuko1101.asterium.Asterium
-import io.github.yuko1101.asterium.features.addons.hud.position.AbsoluteScreenPosition
-import io.github.yuko1101.asterium.features.addons.hud.position.ScreenPosition
+import io.github.yuko1101.asterium.features.hud.position.AbsoluteScreenPosition
+import io.github.yuko1101.asterium.features.hud.position.ScreenPosition
 import kotlin.math.max
 
 abstract class DraggableFeature : HUDFeature() {
@@ -11,26 +11,26 @@ abstract class DraggableFeature : HUDFeature() {
 
     var scale: Float
         get() {
-            if (!Asterium.hudManager.hudConfig.hasPath(listOf(key, "scale"))) {
+            if (!config.has("scale")) {
                 return defaultScale
             }
-            return Asterium.hudManager.hudConfig.get(key).getValue("scale").asFloat
+            return config.getValue("scale").asFloat
         }
         set(value) {
-            Asterium.hudManager.hudConfig.get(key).set("scale", value)
+            config.set("scale", value)
         }
 
     var position: ScreenPosition
         get() {
-            if (!Asterium.hudManager.hudConfig.hasPath(listOf(key, "position"))) {
+            if (!config.has("position")) {
                 return defaultPosition
             }
-            val jsonData = Asterium.hudManager.hudConfig.get(key).getValue("position").asJsonObject
+            val jsonData = config.getValue("position").asJsonObject
             return ScreenPosition.getFromJSON(jsonData)
         }
         set(value) {
             val jsonData = value.toJSON()
-            Asterium.hudManager.hudConfig.get(key).set("position", jsonData)
+            config.set("position", jsonData)
         }
 
     /**

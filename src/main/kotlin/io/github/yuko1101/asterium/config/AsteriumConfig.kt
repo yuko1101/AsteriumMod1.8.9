@@ -4,6 +4,7 @@ import gg.essential.api.utils.GuiUtil
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
+import io.github.yuko1101.asterium.Asterium
 import io.github.yuko1101.asterium.features.addons.AddonManager
 import java.io.File
 
@@ -19,20 +20,18 @@ class AsteriumConfig : Vigilant(File("./asterium/config.toml")) {
 
     fun initAddons() {
         category("Addons") {
-            println("[Asterium Addons] Loading...")
-            println("[Asterium Addons] Addons: ${AddonManager.getAddonMetaDataList().map { addonMetadata -> "${addonMetadata.name} v${addonMetadata.version}" }}")
-            AddonManager.getAddonMetaDataList().forEach{ addonMetaData ->
-                println("[Asterium Addons] Loading ${addonMetaData.name}...")
-                if (!addonMetaData.initialized) {
-                    addonMetaData.addon.init()
-                    addonMetaData.initialized = true
-                }
-                if (addonMetaData.addon.config() != null) {
-                    addonMetaData.addon.config()!!.initialize()
-                    button(addonMetaData.name, addonMetaData.description, addonMetaData.name, action = {
-                        addonMetaData.addon.config()!!.gui()?.let { GuiUtil.open(it) }
+            val addons = Asterium.addonManager.registered.filterNot { it.addonMetaData.initialized }
+            addons.forEach { it.addonMetaData.initialized = true }
+            for (addon in addons) {
+                Asterium.logger.info("[Asterium Addons] Initializing ${addon.addonMetaData.name} v${addon.addonMetaData.version}")
+                addon.onEnable()
+                if (addon.config() != null) {
+                    addon.config()!!.initialize()
+                    button(addon.addonMetaData.name, addon.addonMetaData.description, addon.addonMetaData.name, action = {
+                        addon.config()!!.gui()?.let { GuiUtil.open(it) }
                     })
                 }
+
             }
         }
         initialize()

@@ -1,8 +1,8 @@
 package io.github.yuko1101.asterium.features.addons.impl.debugaddon
 
 import gg.essential.universal.ChatColor
-import io.github.yuko1101.asterium.features.addons.FeaturedAddon
-import io.github.yuko1101.asterium.features.addons.hud.DraggableFeature
+import io.github.yuko1101.asterium.features.addons.AsteriumAddon
+import io.github.yuko1101.asterium.features.hud.DraggableFeature
 
 class TestHud : DraggableFeature() {
 
@@ -10,7 +10,9 @@ class TestHud : DraggableFeature() {
 
     override val name: String
         get() = "testhud"
-    override val addon: FeaturedAddon
+    override val id: String
+        get() = name
+    override val addon: AsteriumAddon
         get() = DebugAddon.instance
     override val height: Float
         get() = font.FONT_HEIGHT.toFloat()

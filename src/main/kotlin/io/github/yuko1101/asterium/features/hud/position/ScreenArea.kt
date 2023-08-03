@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.features.addons.hud.position
+package io.github.yuko1101.asterium.features.hud.position
 
 import kotlin.math.max
 import kotlin.math.min

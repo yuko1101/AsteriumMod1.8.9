@@ -1,6 +1,9 @@
 package io.github.yuko1101.asterium.features.addons
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import io.github.yuko1101.asterium.Asterium
 import org.apache.commons.io.IOUtils
 import java.io.File
 import java.net.URL
@@ -20,26 +23,34 @@ class AddonClassLoader(val jarPath: String) {
 
     var loadedClasses = arrayListOf<String>()
 
-    fun loadClassesInJar(): List<FeaturedAddon> {
-        val result = arrayListOf<FeaturedAddon>()
+    fun loadClassesInJar(): AddonFile? {
+        val result = arrayListOf<AsteriumAddon>()
         val jarFile = JarFile(jarPath)
 
         val searchPaths = arrayListOf<String>()
 
+        val addonMetaFileData: JsonObject
         val addonMetaFile: ZipEntry? = jarFile.getEntry("asterium.addon.json")
         if (addonMetaFile != null) {
             try {
                 val inputStream = jarFile.getInputStream(addonMetaFile)
                 val content = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
                 val json = JsonParser().parse(content)
-                val paths = json.asJsonObject["addons"].asJsonArray.map { it.asJsonObject["path"].asString }
+                addonMetaFileData = json.asJsonObject
+                if (!addonMetaFileData.has("addons")) addonMetaFileData.add("addons", JsonArray())
+                val paths = addonMetaFileData["addons"].asJsonArray.map { it.asJsonObject["path"].asString }
                 searchPaths.addAll(paths)
             } catch (e: Exception) {
-                println("Unknown error occurred while reading asterium.addon.json in $jarPath")
+                Asterium.logger.error("Unknown error occurred while reading asterium.addon.json in $jarPath")
                 e.printStackTrace()
-                return result
+                return null
             }
+        } else {
+            addonMetaFileData = JsonObject()
+            addonMetaFileData.add("addons", JsonArray())
         }
+
+        addonMetaFileData.addProperty("auto_generated", addonMetaFile == null)
 
         val entries: Enumeration<JarEntry> = jarFile.entries()
         while (entries.hasMoreElements()) {
@@ -68,23 +79,32 @@ class AddonClassLoader(val jarPath: String) {
 
 
             val clazz = Class.forName(fileName.substring(0, fileName.length - fileExt.length).replace('/', '.'), true, urlClassLoader)
-            println("[Asterium Addons] Searching for $fileName (${clazz.superclass}, ${clazz.superclass.toString() == FeaturedAddon::class.toString()}, ${FeaturedAddon::class.java.isAssignableFrom(clazz)})")
+            Asterium.logger.info("[Asterium Addons] Searching for $fileName (Extends ${clazz.superclass})")
 
 
-            // FeaturedAddonの派生型であることを確認
-            if (clazz.superclass.toString() == FeaturedAddon::class.toString()) {
-                println("[Asterium Addons] Searching for $fileName (FeaturedAddon)")
+            // AsteriumAddonの派生型であることを確認
+            if (AsteriumAddon::class.java.isAssignableFrom(clazz)) {
+                Asterium.logger.info("[Asterium Addons] Searching for $fileName (AsteriumAddon)")
 
                 val constructor =  clazz.getConstructor()
-                val instance = constructor.newInstance()
+                val instance = constructor.newInstance() as AsteriumAddon
 
-                result.add(instance as FeaturedAddon)
+                result.add(instance)
                 loadedClasses.add("class " + fileName.substring(0, fileName.length - fileExt.length).replace('/', '.'))
-                println("[Asterium Addons] Addon $fileName found!")
+
+                // アドオン情報のファイルの自動生成
+                if (addonMetaFile == null) {
+                    val addonData = JsonObject()
+                    addonData.addProperty("path", fileName)
+                    addonMetaFileData["addons"].asJsonArray.add(addonData)
+                }
+                Asterium.logger.info("[Asterium Addons] Addon $fileName found!")
             }
 
         }
-        return result
+
+        return if (result.isEmpty()) null
+        else AddonFile(result.toList(), jarFile, addonMetaFileData, this).also { it.addons.forEach { addon -> addon.addonFile = it } }
     }
 
     fun unload() {

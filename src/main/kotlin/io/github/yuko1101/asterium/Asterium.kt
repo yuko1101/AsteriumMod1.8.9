@@ -1,15 +1,18 @@
 package io.github.yuko1101.asterium
 
+import com.google.gson.JsonObject
 import gg.essential.api.EssentialAPI
 import io.github.yuko1101.asterium.commands.AsteriumCommand
 import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.features.ChatChannel
 import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.impl.arrowPath.ArrowPath
-import io.github.yuko1101.asterium.features.addons.hud.HUDManager
 import io.github.yuko1101.asterium.features.addons.impl.debugaddon.DebugAddon
+import io.github.yuko1101.asterium.features.hud.HUDFeature
 import io.github.yuko1101.asterium.listener.Listener
+import io.github.yuko1101.asterium.utils.ConfigFile
 import io.github.yuko1101.asterium.utils.FileManager
+import io.github.yuko1101.asterium.utils.ObjectManager
 import io.github.yuko1101.asterium.utils.minecraft.InventoryUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
@@ -21,8 +24,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import org.apache.logging.log4j.LogManager
+import java.io.File
 
-@Mod(modid = Asterium.MODID, version = Asterium.VERSION)
+@Mod(modid = Asterium.MOD_ID, version = Asterium.VERSION)
 class Asterium {
 
     @Mod.EventHandler
@@ -31,27 +36,23 @@ class Asterium {
 
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
-        FileManager.init()
-
-        AddonManager.addons.add(AddonCore(listOf(ArrowPath().getAddonMetaData(), DebugAddon().getAddonMetaData()), null))
-        AddonManager.refreshAddons()
+        addonManager.loadAll(listOf(ArrowPath(), DebugAddon()))
+        addonManager.loadFromAddonDir()
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(EventEmitter)
         MinecraftForge.EVENT_BUS.register(InventoryUtils)
         MinecraftForge.EVENT_BUS.register(Listener)
-//        addons.forEach{ addonMetaData -> MinecraftForge.EVENT_BUS.register(addonMetaData.addon) }
         EssentialAPI.getCommandRegistry().registerCommand(AsteriumCommand())
 
-        Runtime.getRuntime().addShutdownHook(object : Thread("ShutDown") {
+        Runtime.getRuntime().addShutdownHook(object : Thread("Asterium shutdown") {
             override fun run() {
-                AddonManager.getAddonMetaDataList().forEach {
-                    it.addon.shutdown()
-                }
+                logger.info("[Asterium] Shutdown")
+                addonManager.unloadAll()
             }
         })
 
-        EssentialAPI.getNotifications().push("Asterium Addons", "Loaded ${AddonManager.getAddonMetaDataList().size} addons!")
+        EssentialAPI.getNotifications().push("Asterium Addons", "Loaded ${addonManager.registered.size} addons!")
     }
 
     @Mod.EventHandler
@@ -63,11 +64,8 @@ class Asterium {
         @JvmStatic
         val mc: Minecraft = Minecraft.getMinecraft()
 
-        const val MODID = "asterium"
+        const val MOD_ID = "asterium"
         const val VERSION = "0.2.0"
-
-        @JvmStatic
-        var config = AsteriumConfig()
 
         var API_KEY = arrayListOf<String>()
         var keyNumber = -1
@@ -75,7 +73,19 @@ class Asterium {
         var scaledResolution = ScaledResolution(mc)
 
         @JvmStatic
-        val hudManager = HUDManager()
+        val logger = LogManager.getLogger()
+
+        @JvmStatic
+        val hudManager = ObjectManager<HUDFeature>()
+        @JvmStatic
+        val fileManager = FileManager()
+        @JvmStatic
+        val addonManager = AddonManager()
+
+        @JvmStatic
+        var config = AsteriumConfig()
+        @JvmStatic
+        val configFile = ConfigFile(File(fileManager.rootDir, "data.json"), JsonObject())
 
         fun getServerIP(): String? {
             val server: ServerData? = Minecraft.getMinecraft().currentServerData
@@ -86,7 +96,7 @@ class Asterium {
 
 
         fun refresh() {
-            AddonManager.refreshAddons()
+            addonManager.reloadAll()
         }
 
         fun refreshConfig() {

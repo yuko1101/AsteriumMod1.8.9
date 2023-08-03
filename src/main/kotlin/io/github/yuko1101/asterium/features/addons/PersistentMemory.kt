@@ -2,18 +2,18 @@ package io.github.yuko1101.asterium.features.addons
 
 import java.util.*
 
-class Memory(private val addon: AddonMetaData) {
+class PersistentMemory(private val addon: AsteriumAddon) {
     
     companion object {
         val data = mutableMapOf<UUID, MutableMap<String, Any>>()
     }
 
     init {
-        if (!data.containsKey(addon.uuid)) data[addon.uuid] = mutableMapOf()
+        if (!data.containsKey(addon.addonMetaData.uuid)) data[addon.addonMetaData.uuid] = mutableMapOf()
     }
 
     private val addonMemory: MutableMap<String, Any>
-        get() = data[addon.uuid]!!
+        get() = data[addon.addonMetaData.uuid]!!
 
     /** @return Whether the value set successfully. */
     fun set(key: String, value: Any): Boolean {

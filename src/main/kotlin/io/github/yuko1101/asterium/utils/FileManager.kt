@@ -1,67 +1,30 @@
 package io.github.yuko1101.asterium.utils
 
+import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.features.addons.AsteriumAddon
 import java.io.*
 
-object FileManager {
-    val clientDirectory = File("asterium")
-    val modsDirectory = File(clientDirectory, "config")
-    val addonsDirectory = File(clientDirectory, "addons")
-    val cosmeticsDirectory = File(clientDirectory, "cosmetics")
-    fun init() {
-        if (!clientDirectory.exists()) {
-            clientDirectory.mkdirs()
+class FileManager {
+    val rootDir: File by lazy {
+        File(Asterium.MOD_ID).also {
+            if (!it.exists()) it.mkdirs()
         }
-        if (!modsDirectory.exists()) {
-            modsDirectory.mkdirs()
-        }
-        if (!addonsDirectory.exists()) {
-            addonsDirectory.mkdirs()
-        }
-        if (!cosmeticsDirectory.exists()) {
-            cosmeticsDirectory.mkdirs()
+    }
+    val addonsDir: File by lazy {
+        File(rootDir, "addons").also {
+            if (!it.exists()) it.mkdir()
         }
     }
 
-    fun writeToFile(file: File, str: String): Boolean {
-        return try {
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            val outputStream = FileOutputStream(file)
-            outputStream.write(str.toByteArray())
-            outputStream.flush()
-            outputStream.close()
-            true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
+    fun getAddonDir(addon: AsteriumAddon, create: Boolean = true): File {
+        return File(addonsDir, addon.id).also {
+            if (!it.exists() && create) it.mkdir()
         }
     }
 
-    fun readFromJson(file: File, str: String): String? {
-        return try {
-            if (!file.exists()) {
-                file.createNewFile()
-                val outputStream = FileOutputStream(file)
-                outputStream.write(str.toByteArray())
-                outputStream.flush()
-                outputStream.close()
-            }
-            val fileInputStream = FileInputStream(file)
-            val inputStreamReader = InputStreamReader(fileInputStream)
-            val bufferedReader = BufferedReader(inputStreamReader)
-            val builder = StringBuilder()
-            var line: String?
-            while (bufferedReader.readLine().also { line = it } != null) {
-                builder.append(line)
-            }
-            bufferedReader.close()
-            inputStreamReader.close()
-            fileInputStream.close()
-            builder.toString()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            null
+    fun getAddonHUDDir(addon: AsteriumAddon, create: Boolean = true): File {
+        return File(getAddonDir(addon, create), "hud").also {
+            if (!it.exists() && create) it.mkdir()
         }
     }
 }

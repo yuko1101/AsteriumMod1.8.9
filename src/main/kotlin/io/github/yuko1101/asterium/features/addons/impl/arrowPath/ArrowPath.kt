@@ -1,9 +1,8 @@
 package io.github.yuko1101.asterium.features.addons.impl.arrowPath
 
 import gg.essential.vigilance.Vigilant
-import io.github.yuko1101.asterium.features.addons.AddonMetaData
 import io.github.yuko1101.asterium.features.addons.ExtraEventListener
-import io.github.yuko1101.asterium.features.addons.FeaturedAddon
+import io.github.yuko1101.asterium.features.addons.AsteriumAddon
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -12,6 +11,8 @@ import net.minecraft.entity.projectile.EntityArrow
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.event.RenderWorldLastEvent
 import org.lwjgl.opengl.GL11
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Repo: https://github.com/asbyth/ArrowTrail (Not available)
@@ -20,14 +21,22 @@ import org.lwjgl.opengl.GL11
  * More Info: https://github.com/HyperiumClient/Hyperium-Repo/blob/master/installer/addons.json#L3-L13
  * @author asbyth, aycy (Modified by yuko1101)
  */
-class ArrowPath : FeaturedAddon(), ExtraEventListener {
-    override fun init() {
+class ArrowPath : AsteriumAddon(), ExtraEventListener {
+    override fun onEnable(): String? {
+        return null
     }
 
-    override fun addonMetaData(): AddonMetaData {
-        return AddonMetaData("ArrowPath", "0.1.0", "矢の軌跡を表示します", eventListeners = listOf(this))
+    override fun onDisable(): String? {
+        return null
     }
 
+    override val addonMetaData = AddonMetaData(
+        name = "ArrowPath",
+        uuid = UUID.fromString("63efd81f-9a4b-4958-9fd5-1167af552b84"),
+        description = "矢の軌跡を表示します",
+        version = "0.1.0",
+        author = "yuko1101"
+    )
     override fun config(): Vigilant {
         return config
     }

@@ -1,49 +1,97 @@
 package io.github.yuko1101.asterium.features.addons
 
 import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.utils.FileManager
+import io.github.yuko1101.asterium.utils.ObjectManager
 
-object AddonManager {
-    var addons = arrayListOf<AddonCore>()
+class AddonManager : ObjectManager<AsteriumAddon>() {
 
-    fun getAddonMetaDataList(): List<AddonMetaData> {
-        val addonMetaDataList = arrayListOf<AddonMetaData>()
-        for (addon in addons) {
-            addonMetaDataList.addAll(addon.addonMetaDataList)
-        }
-        return addonMetaDataList
-    }
-
-    fun refreshAddons() {
-        if (addons.isNotEmpty()) unloadExternalAddons()
-        loadExternalAddons()
-
-        Asterium.refreshConfig()
-    }
-
-    fun unload() {
-        unloadExternalAddons()
-        Asterium.refreshConfig()
-    }
-
-
-    private fun unloadExternalAddons() {
-        addons.forEach { addon -> addon.addonMetaDataList.forEach { it.addon.shutdown() } }
-        addons.forEach { if (it.unloadable) it.unload() }
-        addons.removeIf { it.unloadable }
-        addons.forEach { addon -> println("[Asterium Addons] Couldn't unload ${addon.addonMetaDataList.joinToString { it.name }}") }
-    }
-
-    private fun loadExternalAddons() {
-        val addonFiles = FileManager.addonsDirectory.listFiles { file -> file.extension == "jar" } ?: return
+    /**
+     * @return Returns error message map
+     */
+    fun loadFromAddonDir(): Map<AsteriumAddon, String> {
+        val errorMessageMap = mutableMapOf<AsteriumAddon, String>()
+        val addonFiles = Asterium.fileManager.addonsDir.listFiles { file -> file.extension == "jar" } ?: return errorMessageMap
         addonFiles.forEach { file ->
-            if (addons.any { it.addonClassLoader?.jarPath == file.absolutePath }) {
-                println("[Asterium Addons] Skipped loading $file because it has already loaded")
+            if (registered.any { it.addonFile?.classLoader?.jarPath == file.absolutePath }) {
+                Asterium.logger.info("[Asterium Addons] Skipped loading $file because it has already loaded")
             } else {
-                println("[Asterium Addons] Loading $file")
+                Asterium.logger.info("[Asterium Addons] Loading $file")
                 val addonClassLoader = AddonClassLoader(file.absolutePath)
-                addons.add(AddonCore(addonClassLoader.loadClassesInJar().map { featuredAddon: FeaturedAddon -> featuredAddon.getAddonMetaData() }, addonClassLoader))
+                val errorMap = loadAll(addonClassLoader.loadClassesInJar().let { it?.addons ?: emptyList() })
+                errorMessageMap.putAll(errorMap)
             }
         }
+
+        return errorMessageMap
+    }
+
+    /**
+     * @return An error message that the addon could not be activated. Return null if it succeeds.
+     */
+    fun load(addon: AsteriumAddon): String? {
+        val errorMessage = addon.onEnable()
+        if (errorMessage == null) {
+            register(addon)
+        }
+        return errorMessage
+    }
+
+    /**
+     * @return Returns error message map
+     */
+    fun loadAll(addons: List<AsteriumAddon>): Map<AsteriumAddon, String> {
+        val errorMessageMap = mutableMapOf<AsteriumAddon, String>()
+        for (addon in addons) {
+            val errorMessage = load(addon)
+            if (errorMessage != null) {
+                errorMessageMap[addon] = errorMessage
+            }
+        }
+        return errorMessageMap.toMap()
+    }
+
+    /**
+     * @return An error message that the addon could not be deactivated. Return null if it succeeds.
+     */
+    fun unload(addon: AsteriumAddon): String? {
+        val errorMessage = addon.onDisable()
+        if (errorMessage == null) {
+            unregister(addon)
+            if (addon.addonFile != null) {
+                addon.addonFile!!.activeAddons.remove(addon)
+                if (addon.addonFile!!.activeAddons.isEmpty()) addon.addonFile!!.unload()
+            }
+        }
+        return errorMessage
+    }
+
+    /**
+     * @return Returns error message map.
+     */
+    fun unloadAll(): Map<AsteriumAddon, String> {
+        val errorMessageMap = mutableMapOf<AsteriumAddon, String>()
+        for (addon in registered) {
+            val errorMessage = unload(addon)
+            if (errorMessage != null) {
+                errorMessageMap[addon] = errorMessage
+            }
+        }
+        return errorMessageMap.toMap()
+    }
+
+    /**
+     * @returns Pair of error message map. First is error message map of unload, second is error message map of load.
+     */
+    fun reloadAll(): Pair<Map<AsteriumAddon, String>, Map<AsteriumAddon, String>> {
+        val unloadErrorMessageMap = unloadAll()
+        val loadErrorMessageMap = loadFromAddonDir()
+
+        return Pair(unloadErrorMessageMap, loadErrorMessageMap)
+    }
+
+    fun initAddons() {
+        Asterium.config.initAddons()
     }
 }

@@ -1,4 +1,4 @@
-package io.github.yuko1101.asterium.features.addons.hud.position
+package io.github.yuko1101.asterium.features.hud.position
 
 import com.google.gson.JsonObject
 import io.github.yuko1101.asterium.Asterium

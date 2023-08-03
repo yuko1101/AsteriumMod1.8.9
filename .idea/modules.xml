@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AsteriumMod.api.iml" filepath="$PROJECT_DIR$/.idea/modules/AsteriumMod.api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AsteriumMod.main.iml" filepath="$PROJECT_DIR$/.idea/modules/AsteriumMod.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AsteriumMod.test.iml" filepath="$PROJECT_DIR$/.idea/modules/AsteriumMod.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/io.github.yuko1101.asterium.AsteriumMod.api.iml" filepath="$PROJECT_DIR$/.idea/modules/io.github.yuko1101.asterium.AsteriumMod.api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/io.github.yuko1101.asterium.AsteriumMod.main.iml" filepath="$PROJECT_DIR$/.idea/modules/io.github.yuko1101.asterium.AsteriumMod.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/io.github.yuko1101.asterium.AsteriumMod.test.iml" filepath="$PROJECT_DIR$/.idea/modules/io.github.yuko1101.asterium.AsteriumMod.test.iml" />
+    </modules>
+  </component>
+</project>

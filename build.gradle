@@ -121,13 +121,17 @@ jar {
     }
 
     manifest.attributes(
-            "ModSide": "CLIENT",
-            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
-            "TweakOrder": "0",
-            "MixinConfigs": "mixins.asterium.json",
-            "ForceLoadAsMod": true,
-            "ModType": "FML",
+        "ModSide": "CLIENT",
+        "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
+        "TweakOrder": "0",
+        "MixinConfigs": "mixins.asterium.json",
+        "ForceLoadAsMod": true,
+        "ModType": "FML",
     )
 }
 
 tasks.withType(Jar).configureEach { compileJava.options.encoding = "UTF-8" }
+
+tasks.withType(Jar).configureEach {
+    compileJava.options.failOnError(false)
+}

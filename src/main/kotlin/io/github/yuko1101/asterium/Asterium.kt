@@ -4,6 +4,8 @@ import com.google.gson.JsonObject
 import gg.essential.api.EssentialAPI
 import io.github.yuko1101.asterium.commands.AsteriumCommand
 import io.github.yuko1101.asterium.config.AsteriumConfig
+import io.github.yuko1101.asterium.events.EventEmitter
+import io.github.yuko1101.asterium.events.EventManager
 import io.github.yuko1101.asterium.features.ChatChannel
 import io.github.yuko1101.asterium.features.addons.*
 import io.github.yuko1101.asterium.features.addons.impl.arrowPath.ArrowPath
@@ -38,6 +40,8 @@ class Asterium {
     fun init(event: FMLInitializationEvent) {
         addonManager.loadAll(listOf(ArrowPath(), DebugAddon()))
         addonManager.loadFromAddonDir()
+
+        addonManager.initAddons()
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(EventEmitter)
@@ -81,6 +85,8 @@ class Asterium {
         val fileManager = FileManager()
         @JvmStatic
         val addonManager = AddonManager()
+        @JvmStatic
+        val eventManager = EventManager()
 
         @JvmStatic
         var config = AsteriumConfig()

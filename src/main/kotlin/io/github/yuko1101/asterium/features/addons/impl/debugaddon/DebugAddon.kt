@@ -15,6 +15,7 @@ class DebugAddon : AsteriumAddon() {
 
     override fun onEnable(): String? {
         instance = this
+        Asterium.eventManager.register(Listener())
         Asterium.hudManager.register(TestHud())
         Asterium.hudManager.register(TestHud2())
 

@@ -1,7 +1,8 @@
 package io.github.yuko1101.asterium.features.addons.impl.arrowPath
 
 import gg.essential.vigilance.Vigilant
-import io.github.yuko1101.asterium.features.addons.ExtraEventListener
+import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.events.EventTrigger
 import io.github.yuko1101.asterium.features.addons.AsteriumAddon
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
@@ -21,8 +22,9 @@ import kotlin.collections.ArrayList
  * More Info: https://github.com/HyperiumClient/Hyperium-Repo/blob/master/installer/addons.json#L3-L13
  * @author asbyth, aycy (Modified by yuko1101)
  */
-class ArrowPath : AsteriumAddon(), ExtraEventListener {
+class ArrowPath : AsteriumAddon() {
     override fun onEnable(): String? {
+        Asterium.eventManager.register(this)
         return null
     }
 
@@ -49,7 +51,8 @@ class ArrowPath : AsteriumAddon(), ExtraEventListener {
     private val removeList = arrayListOf<EntityArrow>()
 
 
-    override fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {
+    @EventTrigger
+    fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {
         if (removeList.size > 0) {
             for (rl in removeList) {
                 if (arrows.map { it.first }.contains(rl)) arrows.removeIf { it.first == rl }

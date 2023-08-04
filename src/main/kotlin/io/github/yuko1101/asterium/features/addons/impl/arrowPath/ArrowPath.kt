@@ -39,9 +39,7 @@ class ArrowPath : AsteriumAddon() {
         version = "0.1.0",
         author = "yuko1101"
     )
-    override fun config(): Vigilant {
-        return config
-    }
+    override val config: ArrowPathConfig = Companion.config
 
     companion object {
         val config = ArrowPathConfig()

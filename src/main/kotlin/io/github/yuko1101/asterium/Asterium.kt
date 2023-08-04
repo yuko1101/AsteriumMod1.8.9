@@ -38,10 +38,9 @@ class Asterium {
 
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
-        addonManager.loadAll(listOf(ArrowPath(), DebugAddon()))
-        addonManager.loadFromAddonDir()
-
-        addonManager.initAddons()
+        addonManager.loadAll(listOf(ArrowPath(), DebugAddon()), updateConfig = false)
+        addonManager.loadFromAddonDir(updateConfig = false)
+        addonManager.updateAddonsConfig()
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(EventEmitter)
@@ -107,7 +106,7 @@ class Asterium {
 
         fun refreshConfig() {
             config = AsteriumConfig()
-            config.initAddons()
+            config.updateAddons()
             config.initialize()
         }
 

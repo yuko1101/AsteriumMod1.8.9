@@ -21,9 +21,8 @@ abstract class AsteriumAddon {
         return null
     }
 
-    open fun config(): Vigilant? {
-        return null
-    }
+    open val config: Vigilant? = null
+
 
     var addonFile: AddonFile? = null
 
@@ -32,7 +31,5 @@ abstract class AsteriumAddon {
 
     class AddonMetaData(val name: String, val uuid: UUID, val description: String, val version: String, val author: String, val url: String?) {
         constructor(name: String, uuid: UUID, description: String, version: String, author: String) : this(name, uuid, description, version, author, null)
-
-        var initialized: Boolean = false
     }
 }

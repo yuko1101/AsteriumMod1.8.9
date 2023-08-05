@@ -1,6 +1,7 @@
 package io.github.yuko1101.asterium.features.addons
 
 import io.github.yuko1101.asterium.Asterium
+import io.github.yuko1101.asterium.config.AsteriumConfig
 import io.github.yuko1101.asterium.utils.ObjectManager
 
 class AddonManager : ObjectManager<AsteriumAddon>() {
@@ -71,6 +72,7 @@ class AddonManager : ObjectManager<AsteriumAddon>() {
      * @return Returns error message map.
      */
     fun unloadAll(): Map<AsteriumAddon, String> {
+        Asterium.config = AsteriumConfig()
         val errorMessageMap = mutableMapOf<AsteriumAddon, String>()
         for (addon in registered) {
             val errorMessage = unload(addon)

@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import java.io.File
 
 @Mod(modid = Asterium.MOD_ID, version = Asterium.VERSION)
@@ -76,7 +77,7 @@ class Asterium {
         var scaledResolution = ScaledResolution(mc)
 
         @JvmStatic
-        val logger = LogManager.getLogger()
+        val logger: Logger = LogManager.getLogger()
 
         @JvmStatic
         val hudManager = ObjectManager<HUDFeature>()
@@ -97,20 +98,9 @@ class Asterium {
             return server?.serverIP
         }
 
-
-
-
         fun refresh() {
             addonManager.reloadAll()
         }
-
-        fun refreshConfig() {
-            config = AsteriumConfig()
-            config.updateAddons()
-            config.initialize()
-        }
-
-
 
     }
 

@@ -6,7 +6,7 @@ import java.util.*
 
 class DebugAddon : AsteriumAddon() {
     override val addonMetaData = AddonMetaData(
-        name ="Debug Addon",
+        name = "Debug Addon",
         uuid = UUID.fromString("6d94fedf-1656-4824-a757-e67c2bcb09b5"),
         description = "Debug Addon for Asterium",
         version = "1.0.0",
